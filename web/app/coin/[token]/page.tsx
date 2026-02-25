@@ -1,11 +1,10 @@
 import Link from 'next/link'
+import TileIcon from '../../components/TileIcon'
 
 function getMode(searchParams: Record<string, string | string[] | undefined>) {
   const m = searchParams.mode
   return (Array.isArray(m) ? m[0] : m) === 'agent' ? 'agent' : 'human'
 }
-
-import TileIcon from '../../components/TileIcon'
 
 function BoardTile({ id, variant, selected, onSelect }: { id: number; variant?: 'none' | 'owned' | 'mine'; selected?: boolean; onSelect?: (id:number)=>void }) {
   const cls = variant === 'mine' ? 'boardTile boardTileMine' : variant === 'owned' ? 'boardTile boardTileOwned' : 'boardTile'
