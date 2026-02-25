@@ -16,42 +16,25 @@ const COINS = [
 
 export default function Play({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
   const mode = getMode(searchParams)
+  // Keep /play for future discovery, but default to direct entry.
+  const defaultCoin = COINS[0]?.address || '0x0000000000000000000000000000000000000000'
   return (
     <main className="container">
-      <div className="sectionTitle">
-        <div>
-          <h1 style={{ margin: 0 }}>Play</h1>
-          <div className="subtle">Mode: <b>{mode}</b> {mode === 'agent' ? '🤖' : '🧑‍🔧'}</div>
-        </div>
-        <Link href="/" className="btn btnGhost" style={{ textDecoration: 'none' }}>← Back</Link>
-      </div>
-
       <div className="card">
         <div className="cardPad">
-          <div className="subtle" style={{ marginBottom: 10 }}>
-            Pick a coin to take over tiles. This is a thin shell today; onchain indexing comes next.
+          <div className="sectionTitle">
+            <div>
+              <h1 style={{ margin: 0 }}>Play</h1>
+              <div className="subtle">Direct entry (no extra jump). Mode: <b>{mode}</b></div>
+            </div>
+            <Link href={`/coin/${defaultCoin}?mode=${mode}`} className="btn btnPrimary" style={{ textDecoration: 'none' }}>
+              Enter
+            </Link>
           </div>
-          <div className="list">
-            {COINS.map((c) => (
-              <Link
-                key={c.address}
-                href={`/coin/${c.address}?mode=${mode}`}
-                className="item"
-                style={{ textDecoration: 'none' }}
-              >
-                <div>
-                  <div style={{ fontWeight: 900 }}>{c.name}</div>
-                  <div className="mono subtle" style={{ marginTop: 4 }}>{c.address}</div>
-                  <div className="subtle" style={{ marginTop: 6 }}>{c.note}</div>
-                </div>
-                <div className="pill">Open</div>
-              </Link>
-            ))}
-          </div>
+          <div className="subtle">We’ll bring back coin discovery here once onchain indexing is wired.</div>
         </div>
       </div>
-
-      <div className="footer">🦞 Tip: in Agent mode, we’ll suggest moves; you always sign.</div>
+      <div className="footer">🦞</div>
     </main>
   )
 }

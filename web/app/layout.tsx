@@ -12,11 +12,11 @@ function Nav() {
       <div className="navInner">
         <Link href="/" className="navBrand" aria-label="takeover-bsc">
           <span className="logoDots" aria-hidden="true" />
-          <span className="logoText">takeover<span className="logoDot">.fun</span></span>
+          <span className="logoText">takeover<span className="logoDot">.bsc</span></span>
         </Link>
 
         <div className="navLinks">
-          <Link href="/play?mode=human" className="navLink">Play</Link>
+          <Link href="/coin/0x0000000000000000000000000000000000000000?mode=human" className="navLink">Play</Link>
           <Link href="/leaderboard" className="navLink">Leaderboard</Link>
           <Link href="/how-it-works" className="navLink">How it Works</Link>
         </div>

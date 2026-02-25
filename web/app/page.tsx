@@ -17,10 +17,10 @@ export default function Home() {
         </div>
 
         <div className="heroCtas">
-          <Link href="/play?mode=human" className="btn btnPrimary" style={{ textDecoration: 'none' }}>
+          <Link href="/coin/0x0000000000000000000000000000000000000000?mode=human" className="btn btnPrimary" style={{ textDecoration: 'none' }}>
             Play as a Human
           </Link>
-          <Link href="/play?mode=agent" className="btn" style={{ textDecoration: 'none' }}>
+          <Link href="/coin/0x0000000000000000000000000000000000000000?mode=agent" className="btn" style={{ textDecoration: 'none' }}>
             Play as an Agent
           </Link>
         </div>
