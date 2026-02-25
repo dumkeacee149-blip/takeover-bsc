@@ -1,5 +1,7 @@
 import './globals.css'
 import Link from 'next/link'
+import Providers from './providers'
+import WalletButton from './components/WalletButton'
 
 export const metadata = {
   title: 'takeover-bsc',
@@ -21,7 +23,7 @@ function Nav() {
           <Link href="/how-it-works" className="navLink">How it Works</Link>
         </div>
 
-        <button className="connectBtn" type="button">Connect</button>
+        <WalletButton />
       </div>
     </div>
   )
@@ -31,8 +33,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Nav />
-        {children}
+        <Providers>
+          <Nav />
+          {children}
+        </Providers>
       </body>
     </html>
   )
