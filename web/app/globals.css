@@ -74,21 +74,29 @@ a{color:inherit}
 /* HERO like takeover.fun */
 .hero{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center}
 .heroInner{width:100%;max-width:920px;padding:34px 20px;display:flex;flex-direction:column;align-items:center;gap:18px}
-.heroTitle{margin:0;font-size:56px;letter-spacing:-1px;line-height:1.03;text-align:center;font-weight:900}
+.heroTitle{margin:0;font-size:60px;letter-spacing:-1.4px;line-height:1.02;text-align:center;font-weight:900}
 .heroAccent{color:#ff3b6b}
+.heroTagline{max-width:820px;text-align:center;color:rgba(232,238,252,.70);line-height:1.6;margin-top:6px}
 .heroBoard{margin-top:10px}
-.heroCtas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px}
-.heroSub{max-width:760px;text-align:center;line-height:1.6;color:rgba(232,238,252,.62)}
+.heroCtas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.heroSub{max-width:820px;text-align:center;line-height:1.6;color:rgba(232,238,252,.62)}
 .heroFooter{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
 
 /* Pixel board */
 .boardWrap{position:relative}
-.board{display:grid;grid-template-columns:repeat(10, 56px);gap:10px;padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02)}
-.boardTile{width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center}
-.boardTile:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.07)}
+.board{display:grid;grid-template-columns:repeat(10, 56px);gap:10px;padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);box-shadow:0 30px 100px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.03)}
+.boardTile{width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));display:flex;align-items:center;justify-content:center;transition:transform .12s ease, border-color .12s ease, filter .12s ease}
+.boardTile:hover{border-color:rgba(255,255,255,.26);transform:translateY(-1px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
 .tileIcon{display:grid;grid-template-columns:repeat(9, 4px);gap:2px;filter: drop-shadow(0 6px 10px rgba(0,0,0,.35))}
 .tilePx{width:4px;height:4px;border-radius:2px}
-.boardGlow{position:absolute;inset:-40px;z-index:-1;background:radial-gradient(400px 260px at 50% 40%, rgba(255,59,107,.12), transparent 55%), radial-gradient(420px 280px at 55% 55%, rgba(124,92,255,.10), transparent 60%)}
+.boardGlow{position:absolute;inset:-55px;z-index:-1;
+  background:
+    radial-gradient(460px 300px at 50% 42%, rgba(255,59,107,.14), transparent 60%),
+    radial-gradient(520px 360px at 54% 58%, rgba(124,92,255,.10), transparent 62%),
+    radial-gradient(420px 260px at 46% 62%, rgba(45,243,197,.06), transparent 58%);
+  animation: glow 4.6s ease-in-out infinite;
+}
+@keyframes glow{0%,100%{opacity:.85;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
 
 /* Existing pages */
 .sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
