@@ -5,49 +5,43 @@ function getMode(searchParams: Record<string, string | string[] | undefined>) {
   return (Array.isArray(m) ? m[0] : m) === 'agent' ? 'agent' : 'human'
 }
 
-function Tile({ id }: { id: number }) {
+function Tile({ id, variant }: { id: number; variant?: 'none' | 'owned' | 'mine' }) {
+  const cls = variant === 'mine' ? 'tile tileMine' : variant === 'owned' ? 'tile tileOwned' : 'tile'
   return (
-    <div
-      style={{
-        width: 28,
-        height: 28,
-        border: '1px solid #eee',
-        borderRadius: 6,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 11,
-        opacity: 0.85,
-      }}
-      title={`Tile ${id}`}
-    >
-      {id}
-    </div>
+    <div className={cls} title={`Tile ${id}`}>{id}</div>
   )
 }
 
 function AgentPanel() {
   return (
-    <aside style={{ width: 320, borderLeft: '1px solid #eee', paddingLeft: 16 }}>
-      <h3>Agent Panel</h3>
-      <p style={{ opacity: 0.75 }}>MVP: agent suggests a move; you still sign the transaction.</p>
-      <div style={{ display: 'grid', gap: 10 }}>
-        <label>Budget (BNB)
-          <input style={{ width: '100%', padding: 8, marginTop: 6 }} placeholder="0.5" />
-        </label>
-        <label>Max price per tile (BNB)
-          <input style={{ width: '100%', padding: 8, marginTop: 6 }} placeholder="0.05" />
-        </label>
-        <label>Strategy
-          <select style={{ width: '100%', padding: 8, marginTop: 6 }} defaultValue="random">
-            <option value="random">Random</option>
-            <option value="cheapest">Cheapest</option>
-            <option value="defend">Defend my tiles</option>
-          </select>
-        </label>
-        <button style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #ddd', background: '#111', color: 'white' }}>
-          Suggest Move
-        </button>
+    <aside className="card agentPanel" style={{ width: 360 }}>
+      <div className="cardPad">
+        <div className="sectionTitle">
+          <h3 style={{ margin: 0 }}>Agent Panel</h3>
+          <span className="pill">🦞 auto-suggest</span>
+        </div>
+        <p className="subtle" style={{ marginTop: 0 }}>
+          MVP: agent suggests a move; you still sign every transaction.
+        </p>
+
+        <div style={{ display: 'grid', gap: 10 }}>
+          <label className="subtle">Budget (BNB)
+            <input className="btn" style={{ width: '100%', justifyContent: 'flex-start' }} placeholder="0.5" />
+          </label>
+          <label className="subtle">Max price per tile (BNB)
+            <input className="btn" style={{ width: '100%', justifyContent: 'flex-start' }} placeholder="0.05" />
+          </label>
+          <label className="subtle">Strategy
+            <select className="btn" style={{ width: '100%' }} defaultValue="cheapest">
+              <option value="cheapest">Cheapest</option>
+              <option value="random">Random</option>
+              <option value="defend">Defend my tiles</option>
+            </select>
+          </label>
+
+          <button className="btn btnPrimary" type="button">Suggest Move</button>
+          <button className="btn" type="button">Execute (sign tx)</button>
+        </div>
       </div>
     </aside>
   )
@@ -60,35 +54,44 @@ export default function CoinPage({ params, searchParams }: { params: { token: st
   const tiles = Array.from({ length: 100 }, (_, i) => i)
 
   return (
-    <main style={{ padding: 32, maxWidth: 1120, margin: '0 auto' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <main className="container">
+      <div className="sectionTitle">
         <div>
-          <div style={{ fontWeight: 800 }}>Coin</div>
-          <div style={{ fontFamily: 'ui-monospace, SFMono-Regular', opacity: 0.7 }}>{token}</div>
-          <div style={{ opacity: 0.8 }}>Mode: <b>{mode}</b></div>
+          <h1 style={{ margin: 0 }}>Coin takeover</h1>
+          <div className="mono subtle" style={{ marginTop: 6 }}>{token}</div>
+          <div className="subtle" style={{ marginTop: 6 }}>Mode: <b>{mode}</b> {mode === 'agent' ? '🤖' : '🧑‍🔧'}</div>
         </div>
-        <button style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid #ddd', background: 'white' }}>
-          Connect
-        </button>
-      </header>
+        <Link href={`/play?mode=${mode}`} className="btn btnGhost" style={{ textDecoration: 'none' }}>← Back</Link>
+      </div>
 
-      <section style={{ display: 'flex', gap: 16, marginTop: 24 }}>
+      <section style={{ display: 'flex', gap: 18, alignItems: 'flex-start' }}>
         <div style={{ flex: 1 }}>
-          <h2>Grid (10×10)</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 28px)', gap: 6, marginTop: 12 }}>
-            {tiles.map((id) => <Tile key={id} id={id} />)}
+          <div className="card">
+            <div className="cardPad">
+              <div className="sectionTitle">
+                <h3 style={{ margin: 0 }}>Grid (10×10)</h3>
+                <span className="pill"><span className="subtle">tile</span> earns 1%</span>
+              </div>
+
+              <div className="tileGrid">
+                {tiles.map((id) => {
+                  // MVP visuals: sprinkle a few occupied tiles
+                  const variant = id % 17 === 0 ? 'mine' : id % 11 === 0 ? 'owned' : 'none'
+                  return <Tile key={id} id={id} variant={variant} />
+                })}
+              </div>
+
+              <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <button className="btn btnPrimary" type="button">Takeover</button>
+                <button className="btn" type="button">Claim</button>
+                <button className="btn btnGhost" type="button">Withdraw buyout</button>
+              </div>
+
+              <p className="subtle" style={{ marginTop: 12 }}>
+                (MVP) Next step: read owner/price from GridRegistry, execute takeover/claim via wallet.
+              </p>
+            </div>
           </div>
-
-          <div style={{ marginTop: 18, display: 'flex', gap: 10 }}>
-            <button style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #ddd', background: 'white' }}>Takeover</button>
-            <button style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #ddd', background: 'white' }}>Claim</button>
-          </div>
-
-          <p style={{ opacity: 0.7, marginTop: 14 }}>
-            (MVP) This page will read tile owner/price from GridRegistry and execute takeover/claim via wallet.
-          </p>
-
-          <Link href={`/play?mode=${mode}`} style={{ textDecoration: 'none' }}>← Back to Play</Link>
         </div>
 
         {mode === 'agent' ? <AgentPanel /> : null}
