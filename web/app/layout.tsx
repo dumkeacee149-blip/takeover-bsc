@@ -10,19 +10,18 @@ function Nav() {
   return (
     <div className="nav">
       <div className="navInner">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <div className="brand" aria-label="takeover-bsc">
-            <div className="brandMark" />
-            <div className="brandText">
-              <div>takeover <span className="subtle">🦞</span></div>
-              <small>Revenue has new management</small>
-            </div>
-          </div>
+        <Link href="/" className="navBrand" aria-label="takeover-bsc">
+          <span className="logoDots" aria-hidden="true" />
+          <span className="logoText">takeover<span className="logoDot">.fun</span></span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span className="pill"><span className="subtle">BSC</span> testnet</span>
-          <button className="btn btnGhost" type="button">Connect</button>
+
+        <div className="navLinks">
+          <Link href="/play?mode=human" className="navLink">Play</Link>
+          <Link href="/leaderboard" className="navLink">Leaderboard</Link>
+          <Link href="/how-it-works" className="navLink">How it Works</Link>
         </div>
+
+        <button className="connectBtn" type="button">Connect</button>
       </div>
     </div>
   )
