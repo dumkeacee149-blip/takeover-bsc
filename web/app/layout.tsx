@@ -2,6 +2,7 @@ import './globals.css'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import Providers from './providers'
+import NetworkBanner from './components/NetworkBanner'
 
 const WalletButton = dynamic(() => import('./components/WalletButton'), { ssr: false })
 
@@ -13,6 +14,7 @@ export const metadata = {
 function Nav() {
   return (
     <div className="nav">
+      <NetworkBanner />
       <div className="navInner">
         <Link href="/" className="navBrand" aria-label="takeover-bsc">
           <span className="logoDots" aria-hidden="true" />

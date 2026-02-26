@@ -35,6 +35,12 @@ a{color:inherit}
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 
+.banner{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,59,107,.12)}
+.bannerInner{max-width:1120px;margin:0 auto;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.bannerTitle{font-weight:900}
+.bannerText{color:rgba(232,238,252,.75);font-size:13px;margin-top:2px}
+.bannerErr{color:rgba(255,200,210,.95);font-size:12px;margin-top:6px;max-width:720px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 .navInner{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:1120px;margin:0 auto;padding:14px 22px}
 
 .navBrand{display:flex;align-items:center;gap:10px;text-decoration:none}
