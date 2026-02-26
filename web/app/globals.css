@@ -65,7 +65,7 @@ a{color:inherit}
 
 .btnGhost{background:transparent;border-color:rgba(255,255,255,.10)}
 
-.card{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:16px;box-shadow:0 18px 60px rgba(0,0,0,.55)}
+.card{border:1px solid rgba(255,255,255,.10);background:rgba(10,14,22,.62);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.55);backdrop-filter: blur(10px)}
 .cardPad{padding:18px}
 
 .subtle{color:rgba(232,238,252,.62)}
@@ -83,13 +83,34 @@ a{color:inherit}
 .heroFooter{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
 
 /* Pixel board */
-.boardWrap{position:relative}
-.board{display:grid;grid-template-columns:repeat(10, 56px);gap:10px;padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);box-shadow:0 30px 100px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.03)}
-.boardTile{width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));display:flex;align-items:center;justify-content:center;transition:transform .12s ease, border-color .12s ease, filter .12s ease;cursor:pointer}
+.boardWrap{position:relative;max-width:760px;margin:0 auto}
+/* Responsive board: no fixed pixel widths; tiles scale to container */
+.board{
+  display:grid;
+  grid-template-columns:repeat(10, minmax(0, 1fr));
+  gap:10px;
+  padding:18px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.02);
+  box-shadow:0 30px 100px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.03);
+}
+.boardTile{
+  width:100%;
+  aspect-ratio:1 / 1;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .12s ease, border-color .12s ease, filter .12s ease;
+  cursor:pointer;
+}
 .boardTile:hover{border-color:rgba(255,255,255,.26);transform:translateY(-1px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
-.boardTileSelected{outline:2px solid rgba(255,59,107,.75);outline-offset:2px}
-.boardTileOwned{border-color:rgba(124,92,255,.38)}
-.boardTileMine{border-color:rgba(45,243,197,.42)}
+.boardTileSelected{outline:2px solid rgba(255,59,107,.78);outline-offset:3px}
+.boardTileOwned{border-color:rgba(124,92,255,.55);box-shadow:0 0 0 1px rgba(124,92,255,.10) inset}
+.boardTileMine{border-color:rgba(45,243,197,.70);box-shadow:0 0 0 1px rgba(45,243,197,.12) inset}
 .tileIcon{display:grid;grid-template-columns:repeat(9, 4px);gap:2px;filter: drop-shadow(0 6px 10px rgba(0,0,0,.35))}
 .tilePx{width:4px;height:4px;border-radius:2px}
 .boardGlow{position:absolute;inset:-55px;z-index:-1;
@@ -102,9 +123,10 @@ a{color:inherit}
 @keyframes glow{0%,100%{opacity:.85;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
 
 /* Existing pages */
-.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sectionTitle h1,.sectionTitle h3{letter-spacing:-.2px}
 .list{display:grid;gap:10px}
-.item{display:flex;justify-content:space-between;gap:10px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03)}
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
 
 /* Play page */
 .playTop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap}
@@ -133,11 +155,11 @@ a{color:inherit}
 }
 
 /* Coin page layout */
-.coinLayout{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+.coinLayout{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
 .boardCol{min-width:0}
 .infoCol{position:sticky;top:86px;height:fit-content}
 .agentCol{position:sticky;top:86px;height:fit-content}
-.boardTitleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.boardTitleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
 @media (max-width: 1100px){
   .coinLayout{grid-template-columns:1fr}
@@ -146,12 +168,12 @@ a{color:inherit}
 
 @media (max-width: 900px){
   .heroTitle{font-size:44px}
-  .board{grid-template-columns:repeat(10, 44px)}
-  .boardTile{width:44px;height:44px;border-radius:14px}
+  .board{gap:8px;padding:14px}
+  .boardTile{border-radius:14px}
 }
 @media (max-width: 560px){
-  .board{grid-template-columns:repeat(10, 34px);gap:8px}
-  .boardTile{width:34px;height:34px;border-radius:12px}
+  .board{gap:7px;padding:12px}
+  .boardTile{border-radius:12px}
   .tileIcon{grid-template-columns:repeat(9, 3px);gap:2px}
   .tilePx{width:3px;height:3px}
 }

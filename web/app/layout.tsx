@@ -1,7 +1,9 @@
 import './globals.css'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import Providers from './providers'
-import WalletButton from './components/WalletButton'
+
+const WalletButton = dynamic(() => import('./components/WalletButton'), { ssr: false })
 
 export const metadata = {
   title: 'takeover-bsc',
