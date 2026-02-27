@@ -54,11 +54,15 @@ export default function Play({ searchParams }: { searchParams: Record<string, st
 
   return (
     <main className="container">
+      <div className="pixelBanner">
+        <img className="pixelBannerImg" src="/pixel-robot-banner.svg" alt="Pixel robot takeover banner" />
+      </div>
+
       <div className="playTop">
         <div>
           <h1 style={{ margin: 0 }}>Play</h1>
           <div className="subtle">
-            Mode: <b>{mode}</b> {mode === 'agent' ? '🤖' : '🧑‍🔧'} — buy out tiles, earn fees, get taken over.
+            Mode: <b>{mode}</b> — choose a coin and takeover tiles.
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>

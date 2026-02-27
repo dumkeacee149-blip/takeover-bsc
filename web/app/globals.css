@@ -148,6 +148,9 @@ a{color:inherit}
 .hint{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px dashed rgba(255,255,255,.14);background:rgba(255,255,255,.02);color:rgba(232,238,252,.70);font-size:13px;line-height:1.5}
 
 /* Play page */
+.pixelBanner{border:2px solid rgba(240,185,11,.22);background:rgba(18,18,21,.92);border-radius:18px;box-shadow:0 12px 0 rgba(0,0,0,.55);overflow:hidden;margin-bottom:14px}
+.pixelBannerImg{width:100%;height:auto;display:block;image-rendering: pixelated}
+
 .playTop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap}
 .playGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
 .coins{display:grid;gap:12px}
@@ -171,6 +174,11 @@ a{color:inherit}
 
 @media (max-width: 900px){
   .playGrid{grid-template-columns:1fr}
+}
+
+@media (max-width: 560px){
+  .pixelBanner{margin-bottom:12px}
+  .pixelBannerImg{transform:scale(1.08);transform-origin:center}
 }
 
 /* Coin page layout */
