@@ -228,6 +228,11 @@ a{color:inherit}
 }
 @media (max-width: 560px){
   html, body{overflow-x:hidden}
+  /* Performance: reduce GPU/paint cost on mobile */
+  .card,.btn,.boardTile,.ticker,.mobileTicker,.feedLine,.walletAvatar{box-shadow:none !important}
+  .boardTile:hover,.btn:hover{transform:none !important}
+  .tickerInner{animation:none !important; transform:none !important}
+
   .container{padding:14px}
   .navInner{padding:10px 14px}
   .navLinks{gap:10px}
@@ -248,7 +253,7 @@ a{color:inherit}
   /* Hide the heavy Live panel when collapsed on mobile */
   .liveFeedCollapsed{display:none}
   .mobileTicker{display:block;margin-bottom:12px}
-  .mobileTicker .tickerInner{padding:9px 10px;animation-duration:14s}
+  .mobileTicker .tickerInner{padding:9px 10px}
 
   .board{gap:6px;padding:12px;width:100%}
   .boardTile{border-radius:12px}

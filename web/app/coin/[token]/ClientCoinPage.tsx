@@ -111,8 +111,15 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     buyoutsWei: 0n,
   })
 
+  const showLiveRef = useRef(showLive)
+  useEffect(() => {
+    showLiveRef.current = showLive
+  }, [showLive])
+
   function pushFeed(kind: string, msg: string) {
-    setFeed((prev) => [{ kind, msg, ts: Date.now() }, ...prev].slice(0, 30))
+    // Performance: when live is collapsed (common on mobile), keep only last 2 messages.
+    const cap = showLiveRef.current ? 30 : 2
+    setFeed((prev) => [{ kind, msg, ts: Date.now() }, ...prev].slice(0, cap))
   }
 
   useWatchContractEvent({
@@ -131,12 +138,15 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const protocolFeeWei = a.protocolFeeWei as bigint
         const newPriceWei = a.newPriceWei as bigint
 
-        setTotals((t) => ({
-          ...t,
-          takeovers: t.takeovers + 1,
-          protocolFeesWei: t.protocolFeesWei + (protocolFeeWei || 0n),
-          buyoutsWei: t.buyoutsWei + (compensationWei || 0n),
-        }))
+        // Performance: totals only update when live is open (mobile keeps it closed).
+        if (showLiveRef.current) {
+          setTotals((t) => ({
+            ...t,
+            takeovers: t.takeovers + 1,
+            protocolFeesWei: t.protocolFeesWei + (protocolFeeWei || 0n),
+            buyoutsWei: t.buyoutsWei + (compensationWei || 0n),
+          }))
+        }
 
         setRecentTakeovers((prev) => [{ tileId, oldOwner, newOwner, priceWei: paidWei, ts: Date.now() }, ...prev].slice(0, 25))
 
@@ -176,7 +186,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const tileId = Number(a.tileId)
         const owner = a.owner as string
         const amountWei = a.amountWei as bigint
-        setTotals((t) => ({ ...t, claimedWei: t.claimedWei + (amountWei || 0n) }))
+        if (showLiveRef.current) setTotals((t) => ({ ...t, claimedWei: t.claimedWei + (amountWei || 0n) }))
         pushFeed('claim', `Claimed on tile #${tileId} by ${short(owner)} · ${formatEther(amountWei)} BNB`)
       }
     },
