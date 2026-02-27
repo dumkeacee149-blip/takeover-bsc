@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { formatEther } from 'viem'
+import { formatEther, parseEther } from 'viem'
 import { useAccount, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
 
 import TileIcon from '../../components/TileIcon'
@@ -81,6 +81,11 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     return res.map((r: any) => (r?.result?.[0] as string | undefined) || '0x0000000000000000000000000000000000000000')
   }, [allTilesRead.data])
 
+  const tilePrices = useMemo(() => {
+    const res = allTilesRead.data || []
+    return res.map((r: any) => (r?.result?.[1] as bigint | undefined) || 0n)
+  }, [allTilesRead.data])
+
   const pendingRead = useReadContract({
     ...feeVault,
     functionName: 'pending',
@@ -97,6 +102,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   // Live feed (session-local): takeovers + claims + withdrawals, plus running totals since page load.
   const [feed, setFeed] = useState<Array<{ kind: string; msg: string; ts: number }>>([])
+  const [recentTakeovers, setRecentTakeovers] = useState<Array<{ tileId: number; oldOwner: string; newOwner: string; priceWei: bigint; ts: number }>>([])
   const [totals, setTotals] = useState<{ takeovers: number; claimedWei: bigint; protocolFeesWei: bigint; buyoutsWei: bigint }>({
     takeovers: 0,
     claimedWei: 0n,
@@ -117,6 +123,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const a = l?.args
         if (!a) continue
         const tileId = Number(a.tileId)
+        const oldOwner = a.oldOwner as string
         const newOwner = a.newOwner as string
         const paidWei = a.paidWei as bigint
         const compensationWei = a.compensationWei as bigint
@@ -129,6 +136,8 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
           protocolFeesWei: t.protocolFeesWei + (protocolFeeWei || 0n),
           buyoutsWei: t.buyoutsWei + (compensationWei || 0n),
         }))
+
+        setRecentTakeovers((prev) => [{ tileId, oldOwner, newOwner, priceWei: paidWei, ts: Date.now() }, ...prev].slice(0, 25))
 
         pushFeed(
           'takeover',
@@ -199,6 +208,90 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
       args: [],
       chainId: 97,
     } as any)
+  }
+
+  // Agent Panel (MVP): local suggestion only, user still signs.
+  const [budgetStr, setBudgetStr] = useState('0.5')
+  const [maxPriceStr, setMaxPriceStr] = useState('0.05')
+  const [strategy, setStrategy] = useState<'cheapest' | 'random' | 'defend'>('cheapest')
+  const [suggestion, setSuggestion] = useState<string>('')
+
+  function parseBNB(s: string): bigint | null {
+    const t = (s || '').trim()
+    if (!t) return null
+    try {
+      return parseEther(t as any)
+    } catch {
+      return null
+    }
+  }
+
+  function suggestMove() {
+    const maxPriceWei = parseBNB(maxPriceStr)
+    const budgetWei = parseBNB(budgetStr)
+
+    if (!address) {
+      setSuggestion('Connect wallet first.')
+      return
+    }
+    if (maxPriceWei === null || maxPriceWei <= 0n) {
+      setSuggestion('Invalid max price.')
+      return
+    }
+    if (budgetWei === null || budgetWei <= 0n) {
+      setSuggestion('Invalid budget.')
+      return
+    }
+
+    // Defend mode: try to buy back the most recently taken tile from you (if affordable).
+    if (strategy === 'defend') {
+      const hit = recentTakeovers.find((t) => t.oldOwner?.toLowerCase() === address.toLowerCase())
+      if (hit) {
+        const p = tilePrices[hit.tileId] || 0n
+        if (p > 0n && p <= maxPriceWei && p <= budgetWei) {
+          setSelectedTile(hit.tileId)
+          setSuggestion(`Defend: buy back tile #${hit.tileId} at ${formatEther(p)} BNB.`)
+          return
+        }
+      }
+    }
+
+    // Candidate set: not mine + price within limits
+    const candidates: number[] = []
+    for (let i = 0; i < 100; i++) {
+      const o = tileOwners[i]
+      const p = tilePrices[i]
+      const mine = !!(me && o && o.toLowerCase() === me)
+      if (mine) continue
+      if (p <= 0n) continue
+      if (p > maxPriceWei) continue
+      if (p > budgetWei) continue
+      candidates.push(i)
+    }
+
+    if (candidates.length === 0) {
+      setSuggestion('No tiles match your constraints. Increase max price / budget.')
+      return
+    }
+
+    let pick = candidates[0]
+    if (strategy === 'random') {
+      pick = candidates[Math.floor(Math.random() * candidates.length)]
+    } else {
+      // cheapest
+      pick = candidates.reduce((best, id) => (tilePrices[id] < tilePrices[best] ? id : best), candidates[0])
+    }
+
+    setSelectedTile(pick)
+    setSuggestion(`Suggested tile #${pick} at ${formatEther(tilePrices[pick])} BNB (${strategy}).`)
+  }
+
+  async function executeSuggested() {
+    if (!address) {
+      setSuggestion('Connect wallet first.')
+      return
+    }
+    await doTakeover()
   }
 
   return (
@@ -369,20 +462,37 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
               </p>
               <div style={{ display: 'grid', gap: 10 }}>
                 <label className="subtle">Budget (BNB)
-                  <input className="btn" style={{ width: '100%', justifyContent: 'flex-start' }} placeholder="0.5" />
+                  <input
+                    className="btn"
+                    style={{ width: '100%', justifyContent: 'flex-start' }}
+                    value={budgetStr}
+                    onChange={(e) => setBudgetStr(e.target.value)}
+                    inputMode="decimal"
+                  />
                 </label>
                 <label className="subtle">Max price per tile (BNB)
-                  <input className="btn" style={{ width: '100%', justifyContent: 'flex-start' }} placeholder="0.05" />
+                  <input
+                    className="btn"
+                    style={{ width: '100%', justifyContent: 'flex-start' }}
+                    value={maxPriceStr}
+                    onChange={(e) => setMaxPriceStr(e.target.value)}
+                    inputMode="decimal"
+                  />
                 </label>
                 <label className="subtle">Strategy
-                  <select className="btn" style={{ width: '100%' }} defaultValue="cheapest">
+                  <select className="btn" style={{ width: '100%' }} value={strategy} onChange={(e) => setStrategy(e.target.value as any)}>
                     <option value="cheapest">Cheapest</option>
                     <option value="random">Random</option>
-                    <option value="defend">Defend my tiles</option>
+                    <option value="defend">Defend (buy back)</option>
                   </select>
                 </label>
-                <button className="btn btnPrimary" type="button">Suggest Move</button>
-                <button className="btn" type="button">Execute (sign tx)</button>
+
+                {suggestion ? (
+                  <div className="hint" style={{ marginTop: 2 }}>{suggestion}</div>
+                ) : null}
+
+                <button className="btn btnPrimary" type="button" onClick={suggestMove}>Suggest Move</button>
+                <button className="btn" type="button" onClick={executeSuggested} disabled={isPending || priceWei === 0n}>Execute (sign tx)</button>
               </div>
             </div>
           </aside>
