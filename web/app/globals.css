@@ -216,6 +216,7 @@ a{color:inherit}
   .boardTile{border-radius:14px}
 }
 @media (max-width: 560px){
+  html, body{overflow-x:hidden}
   .container{padding:14px}
   .navInner{padding:10px 14px}
   .navLinks{gap:10px}
@@ -225,16 +226,23 @@ a{color:inherit}
   .navLong{display:none}
   .navShort{display:inline}
 
-  .sectionTitle{flex-direction:column;align-items:flex-start}
+  .sectionTitle{flex-direction:column;align-items:flex-start;gap:10px}
   .sectionTitle .btn{align-self:flex-start}
 
-  .board{gap:7px;padding:12px}
+  /* Coin page: show board first, live panel below */
+  .boardRow{grid-template-columns:1fr;gap:12px}
+  .coinBoardWrap{order:1;max-width:100%}
+  .liveFeed{order:2;position:static}
+
+  /* Hide the heavy Live panel when collapsed on mobile */
+  .liveFeedCollapsed{display:none}
+
+  .board{gap:6px;padding:12px;width:100%}
   .boardTile{border-radius:12px}
   .tileIcon{grid-template-columns:repeat(9, 3px);gap:2px}
   .tilePx{width:3px;height:3px}
 
   .boardTitleRow{flex-direction:column;align-items:flex-start;gap:10px}
-  .boardRow{gap:12px}
   .liveFeed .cardPad{padding:12px}
   .kpiRow{gap:6px}
   .kpi{padding:8px 8px}
