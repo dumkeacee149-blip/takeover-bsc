@@ -15,9 +15,22 @@ function getMode(searchParams: Record<string, string | string[] | undefined>) {
   return (Array.isArray(m) ? m[0] : m) === 'agent' ? 'agent' : 'human'
 }
 
-function BoardTile({ id, variant, selected, onSelect }: { id: number; variant?: 'none' | 'owned' | 'mine'; selected?: boolean; onSelect?: (id:number)=>void }) {
+function BoardTile({
+  id,
+  variant,
+  selected,
+  onSelect,
+  compact,
+}: {
+  id: number
+  variant?: 'none' | 'owned' | 'mine'
+  selected?: boolean
+  onSelect?: (id: number) => void
+  compact?: boolean
+}) {
   const cls = variant === 'mine' ? 'boardTile boardTileMine' : variant === 'owned' ? 'boardTile boardTileOwned' : 'boardTile'
   const hue = (id * 37) % 360
+
   return (
     <button
       className={selected ? cls + ' boardTileSelected' : cls}
@@ -25,7 +38,11 @@ function BoardTile({ id, variant, selected, onSelect }: { id: number; variant?: 
       type="button"
       title={`Tile ${id}`}
     >
-      <TileIcon seed={1337 + id * 97} hue={hue} size={3} />
+      {compact && !selected ? (
+        <div className="miniPix" style={{ background: `hsl(${hue} 92% 58%)` }} />
+      ) : (
+        <TileIcon seed={1337 + id * 97} hue={hue} size={3} />
+      )}
     </button>
   )
 }
@@ -70,7 +87,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     ...gridRegistry,
     functionName: 'getTile',
     args: [token, BigInt(selectedTile)],
-    query: { refetchInterval: 4000 },
+    query: { refetchInterval: isMobile ? false : 4000 },
   })
 
   const owner = (tileRead.data?.[0] as string | undefined) || undefined
@@ -105,7 +122,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     ...feeVault,
     functionName: 'pending',
     args: [token, BigInt(selectedTile)],
-    query: { refetchInterval: 4000 },
+    query: { refetchInterval: isMobile ? false : 4000 },
   })
 
   const pendingWei = (pendingRead.data as bigint | undefined) || 0n

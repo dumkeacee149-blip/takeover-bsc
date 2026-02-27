@@ -128,6 +128,7 @@ a{color:inherit}
 .boardTileMine{border-color:rgba(240,185,11,.65)}
 .tileIcon{display:grid;grid-template-columns:repeat(9, 4px);gap:2px;image-rendering: pixelated}
 .tilePx{width:4px;height:4px;border-radius:0}
+.miniPix{width:14px;height:14px;border-radius:4px;box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .boardGlow{display:none}
 @keyframes glow{0%,100%{opacity:.85;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
 
