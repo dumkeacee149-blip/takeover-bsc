@@ -99,6 +99,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
   const isMine = !!(me && owner && owner.toLowerCase() === me)
 
   const { writeContractAsync, isPending } = useWriteContract()
+  const [txHash, setTxHash] = useState<string>('')
 
   // Live feed (session-local): takeovers + claims + withdrawals, plus running totals since page load.
   const [feed, setFeed] = useState<Array<{ kind: string; msg: string; ts: number }>>([])
@@ -183,31 +184,37 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   async function doTakeover() {
     // pay exactly current price
-    await writeContractAsync({
+    setTxHash('')
+    const hash = await writeContractAsync({
       ...gridRegistry,
       functionName: 'takeover',
       args: [token, BigInt(selectedTile)],
       value: priceWei,
       chainId: 97,
     } as any)
+    if (hash) setTxHash(String(hash))
   }
 
   async function doClaim() {
-    await writeContractAsync({
+    setTxHash('')
+    const hash = await writeContractAsync({
       ...feeVault,
       functionName: 'claim',
       args: [token, BigInt(selectedTile)],
       chainId: 97,
     } as any)
+    if (hash) setTxHash(String(hash))
   }
 
   async function doWithdraw() {
-    await writeContractAsync({
+    setTxHash('')
+    const hash = await writeContractAsync({
       ...gridRegistry,
       functionName: 'withdraw',
       args: [],
       chainId: 97,
     } as any)
+    if (hash) setTxHash(String(hash))
   }
 
   // Agent Panel (MVP): local suggestion only, user still signs.
@@ -449,6 +456,18 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
               </div>
             </div>
             <div className="actionStack">
+              {txHash ? (
+                <div className="hint" style={{ marginTop: 0 }}>
+                  <a
+                    href={`https://testnet.bscscan.com/tx/${txHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="subtle"
+                  >
+                    Tx sent: {txHash.slice(0, 10)}… (view on BscScan)
+                  </a>
+                </div>
+              ) : null}
               <button className="btn btnPrimary btnFull" type="button" disabled={isPending || priceWei === 0n} onClick={doTakeover}>
                 TAKEOVER · {priceWei ? formatEther(priceWei) : '0'} BNB
               </button>
