@@ -66,8 +66,9 @@ a{color:inherit}
 
 .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:2px solid rgba(240,185,11,.22);background:rgba(18,18,21,.85);color:rgba(245,246,247,.86);font-weight:850}
 
-.btn{cursor:pointer;user-select:none;border-radius:14px;padding:10px 14px;border:2px solid rgba(255,255,255,.12);background:#141419;color:var(--text);display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 0 rgba(0,0,0,.40)}
-.btn:hover{border-color:rgba(240,185,11,.30)}
+/* Unified controls */
+.btn{cursor:pointer;user-select:none;border-radius:14px;padding:11px 14px;min-height:44px;border:2px solid rgba(240,185,11,.22);background:#141419;color:var(--text);display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 0 rgba(0,0,0,.40)}
+.btn:hover{border-color:rgba(240,185,11,.38)}
 .btn:active{transform:translateY(2px);box-shadow:0 6px 0 rgba(0,0,0,.40)}
 
 .btnPrimary{background:var(--accent);border-color:rgba(240,185,11,.65);color:#111;font-weight:980}
@@ -131,10 +132,10 @@ a{color:inherit}
 .sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sectionTitle h1,.sectionTitle h3{letter-spacing:-.2px}
 .list{display:grid;gap:10px}
-.item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:14px;border:2px solid rgba(240,185,11,.14);background:rgba(255,255,255,.02)}
 
 /* Stat rows (coin page right panel) */
-.statRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015))}
+.statRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:16px;border:2px solid rgba(240,185,11,.14);background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015))}
 .statLeft{display:flex;align-items:center;gap:10px;min-width:0}
 .statLabel{font-size:12px;color:rgba(232,238,252,.58);font-weight:850;letter-spacing:.2px}
 .statValue{font-weight:950;font-size:18px;letter-spacing:-.2px}
@@ -197,7 +198,7 @@ a{color:inherit}
 .ownerRow{display:flex;align-items:center;gap:10px}
 
 .kpiRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.kpi{padding:10px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.kpi{padding:10px 10px;border-radius:14px;border:2px solid rgba(240,185,11,.12);background:rgba(255,255,255,.02)}
 .kpiLabel{font-size:11px;color:rgba(232,238,252,.55)}
 .kpiValue{font-weight:900;margin-top:4px}
 
