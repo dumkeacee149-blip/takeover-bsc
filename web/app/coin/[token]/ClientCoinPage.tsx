@@ -245,14 +245,34 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
     // Defend mode: try to buy back the most recently taken tile from you (if affordable).
     if (strategy === 'defend') {
-      const hit = recentTakeovers.find((t) => t.oldOwner?.toLowerCase() === address.toLowerCase())
-      if (hit) {
-        const p = tilePrices[hit.tileId] || 0n
-        if (p > 0n && p <= maxPriceWei && p <= budgetWei) {
-          setSelectedTile(hit.tileId)
-          setSuggestion(`Defend: buy back tile #${hit.tileId} at ${formatEther(p)} BNB.`)
-          return
-        }
+      const hits = recentTakeovers
+        .filter((t) => t.oldOwner?.toLowerCase() === address.toLowerCase())
+        .slice(0, 10)
+
+      // Prefer: within constraints, then cheapest; tiebreaker: most recent.
+      const viable = hits
+        .map((t) => ({
+          ...t,
+          currentPriceWei: tilePrices[t.tileId] || 0n,
+        }))
+        .filter((t) => t.currentPriceWei > 0n && t.currentPriceWei <= maxPriceWei && t.currentPriceWei <= budgetWei)
+
+      if (viable.length > 0) {
+        viable.sort((a, b) => {
+          if (a.currentPriceWei < b.currentPriceWei) return -1
+          if (a.currentPriceWei > b.currentPriceWei) return 1
+          return b.ts - a.ts
+        })
+
+        const best = viable[0]
+        setSelectedTile(best.tileId)
+        setSuggestion(`Defend: buy back tile #${best.tileId} at ${formatEther(best.currentPriceWei)} BNB (cheapest among recent losses).`)
+        return
+      }
+
+      if (hits.length > 0) {
+        setSuggestion('Defend: no recent lost tiles match your constraints. Try raising max price / budget.')
+        // continue to normal selection
       }
     }
 
