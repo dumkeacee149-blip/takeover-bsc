@@ -245,6 +245,17 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                   </div>
                 </div>
 
+                {!showLive ? (
+                  <div className="ticker" aria-label="live ticker">
+                    <div className="tickerInner">
+                      <span className="tickerMeta">Latest</span>
+                      <span>{feed[0]?.msg || 'No activity yet. Make a move →'}</span>
+                      <span className="tickerMeta">•</span>
+                      <span>{feed[1]?.msg || 'Takeover / claim / withdraw events appear here.'}</span>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="liveFeedList" style={{ marginTop: 12 }}>
                   {feed.length === 0 ? (
                     <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
@@ -321,11 +332,24 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                 <div className="statSub">90% → prev owner · 10% → FeeVault</div>
               </div>
             </div>
-            <div style={{ marginTop: 14, display: 'grid', gap: 10 }}>
-              <button className="btn btnPrimary" type="button" disabled={isPending || priceWei === 0n} onClick={doTakeover}>Takeover (pay {priceWei ? formatEther(priceWei) : '0'} BNB)</button>
-              <button className="btn" type="button" disabled={isPending || !isMine || pendingWei === 0n} onClick={doClaim}>Claim fees</button>
-              <button className="btn btnGhost" type="button" disabled={isPending} onClick={doWithdraw}>Withdraw buyouts</button>
+            <div className="actionStack">
+              <button className="btn btnPrimary btnFull" type="button" disabled={isPending || priceWei === 0n} onClick={doTakeover}>
+                Takeover · {priceWei ? formatEther(priceWei) : '0'} BNB
+              </button>
+              <button className="btn btnFull" type="button" disabled={isPending || !isMine || pendingWei === 0n} onClick={doClaim}>
+                Claim fees
+              </button>
+              <button className="btn btnGhost btnFull" type="button" disabled={isPending} onClick={doWithdraw}>
+                Withdraw buyouts
+              </button>
             </div>
+
+            {!address ? (
+              <div className="hint">
+                Connect wallet to takeover tiles. If your wallet is on the wrong network, switch to <b>BSC Testnet (97)</b>.
+              </div>
+            ) : null}
+
             <div className="footer">Connected: {address ? short(address) : 'not connected'}{chainId ? ` · chain ${chainId}` : ''}</div>
           </div>
         </aside>

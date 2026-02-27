@@ -71,7 +71,7 @@ a{color:inherit}
 
 .btnGhost{background:transparent;border-color:rgba(255,255,255,.10)}
 
-.card{border:1px solid rgba(255,255,255,.10);background:rgba(10,14,22,.55);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.50);backdrop-filter: blur(12px)}
+.card{border:1px solid rgba(255,255,255,.10);background:rgba(10,14,22,.50);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.48);backdrop-filter: blur(14px)}
 .cardPad{padding:16px}
 
 .subtle{color:rgba(232,238,252,.62)}
@@ -114,8 +114,8 @@ a{color:inherit}
   transition:transform .12s ease, border-color .12s ease, filter .12s ease;
   cursor:pointer;
 }
-.boardTile:hover{border-color:rgba(255,255,255,.26);transform:translateY(-1px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
-.boardTileSelected{outline:2px solid rgba(255,59,107,.78);outline-offset:3px}
+.boardTile:hover{border-color:rgba(255,255,255,.28);transform:translateY(-1px) scale(1.01);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.boardTileSelected{outline:2px solid rgba(255,59,107,.88);outline-offset:3px;box-shadow:0 0 0 6px rgba(255,59,107,.10)}
 .boardTileOwned{border-color:rgba(124,92,255,.55);box-shadow:0 0 0 1px rgba(124,92,255,.10) inset}
 .boardTileMine{border-color:rgba(45,243,197,.70);box-shadow:0 0 0 1px rgba(45,243,197,.12) inset}
 .tileIcon{display:grid;grid-template-columns:repeat(9, 4px);gap:2px;filter: drop-shadow(0 6px 10px rgba(0,0,0,.35))}
@@ -136,12 +136,16 @@ a{color:inherit}
 .item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
 
 /* Stat rows (coin page right panel) */
-.statRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.statRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015))}
 .statLeft{display:flex;align-items:center;gap:10px;min-width:0}
-.statLabel{font-size:12px;color:rgba(232,238,252,.58);font-weight:800;letter-spacing:.2px}
+.statLabel{font-size:12px;color:rgba(232,238,252,.58);font-weight:850;letter-spacing:.2px}
 .statValue{font-weight:950;font-size:18px;letter-spacing:-.2px}
-.statValueBig{font-weight:980;font-size:22px;letter-spacing:-.4px}
+.statValueBig{font-weight:990;font-size:24px;letter-spacing:-.6px}
 .statSub{font-size:12px;color:rgba(232,238,252,.55)}
+
+.actionStack{margin-top:14px;display:grid;gap:10px}
+.btnFull{width:100%;justify-content:center}
+.hint{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px dashed rgba(255,255,255,.14);background:rgba(255,255,255,.02);color:rgba(232,238,252,.70);font-size:13px;line-height:1.5}
 
 /* Play page */
 .playTop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap}
@@ -181,6 +185,11 @@ a{color:inherit}
 .liveFeedList{display:grid;gap:10px;max-height:520px;overflow:auto;padding-right:4px}
 .liveFeedCollapsed .liveFeedList{display:none}
 .liveFeedCollapsed .kpiRow{grid-template-columns:1fr}
+
+.ticker{margin-top:10px;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.tickerInner{display:flex;gap:14px;white-space:nowrap;will-change:transform;animation:ticker 18s linear infinite;padding:10px 12px;font-weight:900;color:rgba(232,238,252,.80)}
+.tickerMeta{font-size:12px;font-weight:800;color:rgba(232,238,252,.50)}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-55%)}}
 .feedLine{display:flex;flex-direction:column;gap:6px;padding:10px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
 .feedMeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:rgba(232,238,252,.50)}
 .walletAvatar{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
