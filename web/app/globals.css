@@ -111,7 +111,7 @@ a{color:inherit}
 .boardTile{
   width:100%;
   aspect-ratio:1 / 1;
-  border-radius:14px;
+  border-radius:16px;
   border:2px solid rgba(255,255,255,.10);
   background:#141419;
   display:flex;
@@ -119,13 +119,15 @@ a{color:inherit}
   justify-content:center;
   transition:transform .10s ease;
   cursor:pointer;
+  box-shadow:0 8px 0 rgba(0,0,0,.35);
 }
-.boardTile:hover{transform:translateY(-1px)}
-.boardTileSelected{outline:2px solid rgba(240,185,11,.95);outline-offset:3px;box-shadow:0 0 0 6px rgba(240,185,11,.12)}
+.boardTile:hover{transform:translateY(-2px)}
+.boardTile:active{transform:translateY(0)}
+.boardTileSelected{outline:3px solid rgba(240,185,11,.95);outline-offset:3px;box-shadow:0 0 0 7px rgba(240,185,11,.12)}
 .boardTileOwned{border-color:rgba(240,185,11,.28)}
 .boardTileMine{border-color:rgba(240,185,11,.65)}
 .tileIcon{display:grid;grid-template-columns:repeat(9, 4px);gap:2px;image-rendering: pixelated}
-.tilePx{width:4px;height:4px;border-radius:2px}
+.tilePx{width:4px;height:4px;border-radius:0}
 .boardGlow{display:none}
 @keyframes glow{0%,100%{opacity:.85;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
 
