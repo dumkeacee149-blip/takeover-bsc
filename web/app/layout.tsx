@@ -22,9 +22,15 @@ function Nav() {
         </Link>
 
         <div className="navLinks">
-          <Link href="/coin/0x0000000000000000000000000000000000000000?mode=human" className="navLink">Play</Link>
-          <Link href="/leaderboard" className="navLink">Leaderboard</Link>
-          <Link href="/how-it-works" className="navLink">How it Works</Link>
+          <Link href="/coin/0x0000000000000000000000000000000000000000?mode=human" className="navLink">
+            <span className="navLong">Play</span><span className="navShort">Play</span>
+          </Link>
+          <Link href="/leaderboard" className="navLink">
+            <span className="navLong">Leaderboard</span><span className="navShort">Rank</span>
+          </Link>
+          <Link href="/how-it-works" className="navLink">
+            <span className="navLong">How it Works</span><span className="navShort">Rules</span>
+          </Link>
         </div>
 
         <WalletButton />

@@ -519,15 +519,20 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         ) : null}
       </section>
 
-      <div className="card" style={{ marginTop: 16 }}>
-        <div className="cardPad">
-          <div className="subtle">Contracts</div>
+      <details className="card contractsCard" style={{ marginTop: 16 }}>
+        <summary className="cardPad contractsSummary">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ fontWeight: 950 }}>Contracts</div>
+            <span className="subtle">tap</span>
+          </div>
+        </summary>
+        <div className="cardPad" style={{ paddingTop: 0 }}>
           <div className="mono" style={{ display: 'grid', gap: 6, marginTop: 8 }}>
             <div>GridRegistry: {gridRegistry.address}</div>
             <div>FeeVault: {feeVault.address}</div>
           </div>
         </div>
-      </div>
+      </details>
     </main>
   )
 }

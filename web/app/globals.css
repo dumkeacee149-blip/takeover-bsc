@@ -28,6 +28,7 @@ body{
 }
 
 a{color:inherit}
+.navShort{display:none}
 
 .container{max-width:1180px;margin:0 auto;padding:24px}
 
@@ -221,6 +222,9 @@ a{color:inherit}
   .navLink{font-size:13px}
   .connectBtn{padding:9px 12px;border-radius:12px;font-size:12px}
 
+  .navLong{display:none}
+  .navShort{display:inline}
+
   .sectionTitle{flex-direction:column;align-items:flex-start}
   .sectionTitle .btn{align-self:flex-start}
 
@@ -238,6 +242,9 @@ a{color:inherit}
 
   .actionStack{gap:8px}
   .btn{min-height:42px}
+
+  .contractsSummary{cursor:pointer}
+  .contractsSummary::-webkit-details-marker{display:none}
 
   .footer{font-size:12px}
 }

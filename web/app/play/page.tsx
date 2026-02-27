@@ -97,7 +97,7 @@ export default function Play({ searchParams }: { searchParams: Record<string, st
               <div className="item">
                 <div>
                   <div style={{ fontWeight: 900 }}>No rewards yet</div>
-                  <div className="subtle">Deploy contracts to BSC testnet to populate this feed.</div>
+                  <div className="subtle">No events yet. Takeover a tile, then claim fees to populate this feed.</div>
                 </div>
                 <div className="mono subtle">—</div>
               </div>
