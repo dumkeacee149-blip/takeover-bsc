@@ -24,8 +24,7 @@ body{
     radial-gradient(760px 520px at 40% 92%, rgba(255,59,107,.10), transparent 60%),
     var(--bg);
   color:var(--text);
-  /* Cartoon-ish system font stack */
-  font-family: ui-rounded, "SF Pro Rounded", "SF Pro Display", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 a{color:inherit}
@@ -67,16 +66,16 @@ a{color:inherit}
 
 .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:2px solid rgba(17,19,24,.14);background:rgba(255,255,255,.90);color:rgba(17,19,24,.80);font-weight:950}
 
-.btn{cursor:pointer;user-select:none;border-radius:16px;padding:10px 14px;border:3px solid rgba(17,19,24,.16);background:rgba(255,255,255,.96);color:var(--text);display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 0 rgba(17,19,24,.18), inset 0 -2px 0 rgba(17,19,24,.06)}
-.btn:hover{border-color:rgba(17,19,24,.26)}
-.btn:active{transform:translateY(2px);box-shadow:0 8px 0 rgba(17,19,24,.18), inset 0 -2px 0 rgba(17,19,24,.06)}
+.btn{cursor:pointer;user-select:none;border-radius:16px;padding:10px 14px;border:2px solid rgba(17,19,24,.14);background:rgba(255,255,255,.92);color:var(--text);display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 0 rgba(17,19,24,.18)}
+.btn:hover{border-color:rgba(17,19,24,.22)}
+.btn:active{transform:translateY(2px);box-shadow:0 6px 0 rgba(17,19,24,.18)}
 
-.btnPrimary{background:var(--accent);border-color:rgba(185,133,0,.55);color:#111;font-weight:990}
-.btnPrimary:hover{border-color:rgba(185,133,0,.80)}
+.btnPrimary{background:var(--accent);border-color:rgba(185,133,0,.45);color:#111;font-weight:990}
+.btnPrimary:hover{border-color:rgba(185,133,0,.70)}
 
 .btnGhost{background:transparent;border-color:rgba(17,19,24,.14)}
 
-.card{border:3px solid rgba(17,19,24,.14);background:rgba(255,255,255,.94);border-radius:22px;box-shadow:0 14px 0 rgba(17,19,24,.18), inset 0 -2px 0 rgba(17,19,24,.06)}
+.card{border:2px solid rgba(17,19,24,.14);background:rgba(255,255,255,.92);border-radius:20px;box-shadow:0 12px 0 rgba(17,19,24,.18)}
 .cardPad{padding:16px}
 
 .subtle{color:rgba(17,19,24,.62)}
@@ -102,23 +101,23 @@ a{color:inherit}
   grid-template-columns:repeat(10, minmax(0, 1fr));
   gap:10px;
   padding:18px;
-  border-radius:22px;
-  border:3px solid rgba(17,19,24,.16);
-  background:rgba(255,255,255,.94);
-  box-shadow:0 14px 0 rgba(17,19,24,.18), inset 0 -2px 0 rgba(17,19,24,.06);
+  border-radius:20px;
+  border:2px solid rgba(17,19,24,.16);
+  background:rgba(255,255,255,.92);
+  box-shadow:0 14px 0 rgba(17,19,24,.18);
 }
 .boardTile{
   width:100%;
   aspect-ratio:1 / 1;
-  border-radius:18px;
-  border:3px solid rgba(17,19,24,.12);
-  background:rgba(255,255,255,.96);
+  border-radius:16px;
+  border:2px solid rgba(17,19,24,.12);
+  background:rgba(255,255,255,.92);
   display:flex;
   align-items:center;
   justify-content:center;
   transition:transform .10s ease;
   cursor:pointer;
-  box-shadow:0 8px 0 rgba(17,19,24,.12), inset 0 -2px 0 rgba(17,19,24,.05);
+  box-shadow:0 6px 0 rgba(17,19,24,.12);
 }
 .boardTile:hover{transform:translateY(-2px)}
 .boardTile:active{transform:translateY(0)}
