@@ -167,9 +167,19 @@ a{color:inherit}
 .agentCol{position:sticky;top:86px;height:fit-content}
 .boardTitleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
+.boardRow{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.liveFeed{position:sticky;top:86px;height:fit-content}
+.liveFeedList{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
+.feedLine{display:flex;flex-direction:column;gap:4px;padding:10px 11px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03)}
+.feedMeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:rgba(232,238,252,.55)}
+.walletAvatar{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.ownerRow{display:flex;align-items:center;gap:10px}
+
 @media (max-width: 1100px){
   .coinLayout{grid-template-columns:1fr}
   .infoCol,.agentCol{position:static}
+  .boardRow{grid-template-columns:1fr}
+  .liveFeed{position:static}
 }
 
 @media (max-width: 900px){

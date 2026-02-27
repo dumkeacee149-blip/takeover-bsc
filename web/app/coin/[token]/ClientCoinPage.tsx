@@ -3,9 +3,10 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { formatEther } from 'viem'
-import { useAccount, useReadContract, useReadContracts, useWriteContract } from 'wagmi'
+import { useAccount, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
 
 import TileIcon from '../../components/TileIcon'
+import WalletAvatar from '../../components/WalletAvatar'
 import { assertWebConfig } from '../../lib/chain'
 import { gridRegistry, feeVault } from '../../lib/contracts'
 
@@ -93,6 +94,83 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   const { writeContractAsync, isPending } = useWriteContract()
 
+  // Live feed (session-local): takeovers + claims + withdrawals, plus running totals since page load.
+  const [feed, setFeed] = useState<Array<{ kind: string; msg: string; ts: number }>>([])
+  const [totals, setTotals] = useState<{ takeovers: number; claimedWei: bigint; protocolFeesWei: bigint; buyoutsWei: bigint }>({
+    takeovers: 0,
+    claimedWei: 0n,
+    protocolFeesWei: 0n,
+    buyoutsWei: 0n,
+  })
+
+  function pushFeed(kind: string, msg: string) {
+    setFeed((prev) => [{ kind, msg, ts: Date.now() }, ...prev].slice(0, 30))
+  }
+
+  useWatchContractEvent({
+    ...gridRegistry,
+    eventName: 'Takeover',
+    args: { coin: token } as any,
+    onLogs(logs) {
+      for (const l of logs as any[]) {
+        const a = l?.args
+        if (!a) continue
+        const tileId = Number(a.tileId)
+        const newOwner = a.newOwner as string
+        const paidWei = a.paidWei as bigint
+        const compensationWei = a.compensationWei as bigint
+        const protocolFeeWei = a.protocolFeeWei as bigint
+        const newPriceWei = a.newPriceWei as bigint
+
+        setTotals((t) => ({
+          ...t,
+          takeovers: t.takeovers + 1,
+          protocolFeesWei: t.protocolFeesWei + (protocolFeeWei || 0n),
+          buyoutsWei: t.buyoutsWei + (compensationWei || 0n),
+        }))
+
+        pushFeed(
+          'takeover',
+          `Takeover tile #${tileId} by ${short(newOwner)} · paid ${formatEther(paidWei)} · next ${formatEther(newPriceWei)} BNB`
+        )
+      }
+    },
+  })
+
+  useWatchContractEvent({
+    ...gridRegistry,
+    eventName: 'Withdraw',
+    onLogs(logs) {
+      for (const l of logs as any[]) {
+        const a = l?.args
+        if (!a) continue
+        const user = a.user as string
+        const amountWei = a.amountWei as bigint
+        // only show on this page when it's you, otherwise it's noisy
+        if (address && user?.toLowerCase() === address.toLowerCase()) {
+          pushFeed('withdraw', `Buyouts withdrawn by you: ${formatEther(amountWei)} BNB`)
+        }
+      }
+    },
+  })
+
+  useWatchContractEvent({
+    ...feeVault,
+    eventName: 'Claimed',
+    args: { coin: token } as any,
+    onLogs(logs) {
+      for (const l of logs as any[]) {
+        const a = l?.args
+        if (!a) continue
+        const tileId = Number(a.tileId)
+        const owner = a.owner as string
+        const amountWei = a.amountWei as bigint
+        setTotals((t) => ({ ...t, claimedWei: t.claimedWei + (amountWei || 0n) }))
+        pushFeed('claim', `Claimed on tile #${tileId} by ${short(owner)} · ${formatEther(amountWei)} BNB`)
+      }
+    },
+  })
+
   async function doTakeover() {
     // pay exactly current price
     await writeContractAsync({
@@ -140,8 +218,38 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             <span className="pill">testnet</span>
           </div>
 
-          <div className="boardWrap">
-            <div className="board">
+          <div className="boardRow">
+            <aside className="card liveFeed">
+              <div className="cardPad">
+                <div className="sectionTitle" style={{ marginBottom: 10 }}>
+                  <h3 style={{ margin: 0 }}>Live</h3>
+                  <span className="pill"><span className="subtle">session</span></span>
+                </div>
+                <div className="subtle" style={{ fontSize: 13, lineHeight: 1.5 }}>
+                  Takeovers: <b>{totals.takeovers}</b>
+                  <br />Protocol fees: <b>{formatEther(totals.protocolFeesWei)}</b> BNB
+                  <br />Claimed: <b>{formatEther(totals.claimedWei)}</b> BNB
+                </div>
+                <div className="liveFeedList" style={{ marginTop: 12 }}>
+                  {feed.length === 0 ? (
+                    <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
+                  ) : (
+                    feed.map((f, idx) => (
+                      <div key={idx} className="feedLine">
+                        <div style={{ fontWeight: 900 }}>{f.msg}</div>
+                        <div className="feedMeta">
+                          <span>{f.kind}</span>
+                          <span>{new Date(f.ts).toLocaleTimeString()}</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </aside>
+
+            <div className="boardWrap">
+              <div className="board">
               {tiles.map((id) => {
                 const o = tileOwners[id]
                 const isOwned = !!o && o !== '0x0000000000000000000000000000000000000000'
@@ -160,7 +268,9 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                 )
               })}
             </div>
-            <div className="boardGlow" aria-hidden="true" />
+              </div>
+              <div className="boardGlow" aria-hidden="true" />
+            </div>
           </div>
         </div>
 
@@ -171,7 +281,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
               <span className="pill"><span className="subtle">onchain</span></span>
             </div>
             <div className="list">
-              <div className="item"><div className="subtle">Owner</div><div className="mono">{owner ? short(owner) : '—'}</div></div>
+              <div className="item"><div className="subtle">Owner</div><div className="ownerRow"><WalletAvatar address={owner} size={26} /><div className="mono">{owner ? short(owner) : '—'}</div></div></div>
               <div className="item"><div className="subtle">Price</div><div><b>{priceWei ? formatEther(priceWei) : '0'}</b> BNB</div></div>
               <div className="item"><div className="subtle">Claimable</div><div><b>{pendingWei ? formatEther(pendingWei) : '0'}</b> BNB</div></div>
               <div className="item"><div className="subtle">Buyout</div><div className="subtle">90% → prev owner, 10% → FeeVault</div></div>
