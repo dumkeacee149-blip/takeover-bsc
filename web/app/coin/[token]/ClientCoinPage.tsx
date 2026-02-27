@@ -248,10 +248,10 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                 {!showLive ? (
                   <div className="ticker" aria-label="live ticker">
                     <div className="tickerInner">
-                      <span className="tickerMeta">Latest</span>
+                      <span className="tickerMeta">LIVE</span>
                       <span>{feed[0]?.msg || 'No activity yet. Make a move →'}</span>
                       <span className="tickerMeta">•</span>
-                      <span>{feed[1]?.msg || 'Takeover / claim / withdraw events appear here.'}</span>
+                      <span>{feed[1]?.msg || 'Events: takeover / claim / withdraw.'}</span>
                     </div>
                   </div>
                 ) : null}
@@ -261,7 +261,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                     <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
                   ) : (
                     feed.map((f, idx) => (
-                      <div key={idx} className="feedLine">
+                      <div key={idx} className={"feedLine " + (f.kind || '')}>
                         <div style={{ fontWeight: 900, lineHeight: 1.35 }}>{f.msg}</div>
                         <div className="feedMeta">
                           <span>{f.kind}</span>
@@ -302,8 +302,11 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         <aside className="card infoCol">
           <div className="cardPad">
             <div className="sectionTitle">
-              <h3 style={{ margin: 0 }}>Tile #{selectedTile}</h3>
-              <span className="pill"><span className="subtle">onchain</span></span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <TileIcon seed={1337 + selectedTile * 97} hue={(selectedTile * 37) % 360} size={2} />
+                <h3 style={{ margin: 0 }}>Tile #{selectedTile}</h3>
+              </div>
+              <span className="pill"><span className="subtle">ONCHAIN</span></span>
             </div>
             <div className="list">
               <div className="statRow">
@@ -334,13 +337,13 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             </div>
             <div className="actionStack">
               <button className="btn btnPrimary btnFull" type="button" disabled={isPending || priceWei === 0n} onClick={doTakeover}>
-                Takeover · {priceWei ? formatEther(priceWei) : '0'} BNB
+                TAKEOVER · {priceWei ? formatEther(priceWei) : '0'} BNB
               </button>
               <button className="btn btnFull" type="button" disabled={isPending || !isMine || pendingWei === 0n} onClick={doClaim}>
-                Claim fees
+                CLAIM FEES
               </button>
               <button className="btn btnGhost btnFull" type="button" disabled={isPending} onClick={doWithdraw}>
-                Withdraw buyouts
+                WITHDRAW BUYOUTS
               </button>
             </div>
 
