@@ -250,24 +250,23 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
             <div className="boardWrap">
               <div className="board">
-              {tiles.map((id) => {
-                const o = tileOwners[id]
-                const isOwned = !!o && o !== '0x0000000000000000000000000000000000000000'
-                const mine = !!(me && o && o.toLowerCase() === me)
+                {tiles.map((id) => {
+                  const o = tileOwners[id]
+                  const isOwned = !!o && o !== '0x0000000000000000000000000000000000000000'
+                  const mine = !!(me && o && o.toLowerCase() === me)
 
-                const variant = mine ? 'mine' : isOwned ? 'owned' : 'none'
+                  const variant = mine ? 'mine' : isOwned ? 'owned' : 'none'
 
-                return (
-                  <BoardTile
-                    key={id}
-                    id={id}
-                    variant={variant as any}
-                    selected={id === selectedTile}
-                    onSelect={setSelectedTile}
-                  />
-                )
-              })}
-            </div>
+                  return (
+                    <BoardTile
+                      key={id}
+                      id={id}
+                      variant={variant as any}
+                      selected={id === selectedTile}
+                      onSelect={setSelectedTile}
+                    />
+                  )
+                })}
               </div>
               <div className="boardGlow" aria-hidden="true" />
             </div>
