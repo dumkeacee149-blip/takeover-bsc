@@ -26,7 +26,7 @@ body{
 
 a{color:inherit}
 
-.container{max-width:1080px;margin:0 auto;padding:28px}
+.container{max-width:1180px;margin:0 auto;padding:24px}
 
 .nav{
   position:sticky;top:0;z-index:30;
@@ -71,8 +71,8 @@ a{color:inherit}
 
 .btnGhost{background:transparent;border-color:rgba(255,255,255,.10)}
 
-.card{border:1px solid rgba(255,255,255,.10);background:rgba(10,14,22,.62);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.55);backdrop-filter: blur(10px)}
-.cardPad{padding:18px}
+.card{border:1px solid rgba(255,255,255,.10);background:rgba(10,14,22,.55);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.50);backdrop-filter: blur(12px)}
+.cardPad{padding:16px}
 
 .subtle{color:rgba(232,238,252,.62)}
 .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
@@ -96,17 +96,17 @@ a{color:inherit}
   grid-template-columns:repeat(10, minmax(0, 1fr));
   gap:10px;
   padding:18px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.02);
-  box-shadow:0 30px 100px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.03);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.018);
+  box-shadow:0 26px 90px rgba(0,0,0,.60), inset 0 0 0 1px rgba(255,255,255,.03);
 }
 .boardTile{
   width:100%;
   aspect-ratio:1 / 1;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
   display:flex;
   align-items:center;
   justify-content:center;
@@ -132,7 +132,7 @@ a{color:inherit}
 .sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sectionTitle h1,.sectionTitle h3{letter-spacing:-.2px}
 .list{display:grid;gap:10px}
-.item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
 
 /* Play page */
 .playTop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap}
@@ -167,13 +167,18 @@ a{color:inherit}
 .agentCol{position:sticky;top:86px;height:fit-content}
 .boardTitleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
-.boardRow{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.boardRow{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
 .liveFeed{position:sticky;top:86px;height:fit-content}
 .liveFeedList{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
-.feedLine{display:flex;flex-direction:column;gap:4px;padding:10px 11px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03)}
-.feedMeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:rgba(232,238,252,.55)}
-.walletAvatar{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.feedLine{display:flex;flex-direction:column;gap:6px;padding:10px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.feedMeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:rgba(232,238,252,.50)}
+.walletAvatar{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
 .ownerRow{display:flex;align-items:center;gap:10px}
+
+.kpiRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.kpi{padding:10px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.kpiLabel{font-size:11px;color:rgba(232,238,252,.55)}
+.kpiValue{font-weight:900;margin-top:4px}
 
 @media (max-width: 1100px){
   .coinLayout{grid-template-columns:1fr}

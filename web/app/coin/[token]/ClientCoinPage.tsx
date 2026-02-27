@@ -225,18 +225,28 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                   <h3 style={{ margin: 0 }}>Live</h3>
                   <span className="pill"><span className="subtle">session</span></span>
                 </div>
-                <div className="subtle" style={{ fontSize: 13, lineHeight: 1.5 }}>
-                  Takeovers: <b>{totals.takeovers}</b>
-                  <br />Protocol fees: <b>{formatEther(totals.protocolFeesWei)}</b> BNB
-                  <br />Claimed: <b>{formatEther(totals.claimedWei)}</b> BNB
+                <div className="kpiRow">
+                  <div className="kpi">
+                    <div className="kpiLabel">Takeovers</div>
+                    <div className="kpiValue">{totals.takeovers}</div>
+                  </div>
+                  <div className="kpi">
+                    <div className="kpiLabel">Protocol fees</div>
+                    <div className="kpiValue">{formatEther(totals.protocolFeesWei)}</div>
+                  </div>
+                  <div className="kpi">
+                    <div className="kpiLabel">Claimed</div>
+                    <div className="kpiValue">{formatEther(totals.claimedWei)}</div>
+                  </div>
                 </div>
+
                 <div className="liveFeedList" style={{ marginTop: 12 }}>
                   {feed.length === 0 ? (
                     <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
                   ) : (
                     feed.map((f, idx) => (
                       <div key={idx} className="feedLine">
-                        <div style={{ fontWeight: 900 }}>{f.msg}</div>
+                        <div style={{ fontWeight: 900, lineHeight: 1.35 }}>{f.msg}</div>
                         <div className="feedMeta">
                           <span>{f.kind}</span>
                           <span>{new Date(f.ts).toLocaleTimeString()}</span>
