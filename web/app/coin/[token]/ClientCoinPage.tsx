@@ -290,10 +290,31 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
               <span className="pill"><span className="subtle">onchain</span></span>
             </div>
             <div className="list">
-              <div className="item"><div className="subtle">Owner</div><div className="ownerRow"><WalletAvatar address={owner} size={26} /><div className="mono">{owner ? short(owner) : '—'}</div></div></div>
-              <div className="item"><div className="subtle">Price</div><div><b>{priceWei ? formatEther(priceWei) : '0'}</b> BNB</div></div>
-              <div className="item"><div className="subtle">Claimable</div><div><b>{pendingWei ? formatEther(pendingWei) : '0'}</b> BNB</div></div>
-              <div className="item"><div className="subtle">Buyout</div><div className="subtle">90% → prev owner, 10% → FeeVault</div></div>
+              <div className="statRow">
+                <div className="statLeft">
+                  <WalletAvatar address={owner} size={26} />
+                  <div style={{ display: 'grid', gap: 2 }}>
+                    <div className="statLabel">Owner</div>
+                    <div className="mono" style={{ fontWeight: 900 }}>{owner ? short(owner) : '—'}</div>
+                  </div>
+                </div>
+                <span className="pill"><span className="subtle">onchain</span></span>
+              </div>
+
+              <div className="statRow">
+                <div className="statLabel">Price</div>
+                <div className="statValueBig">{priceWei ? formatEther(priceWei) : '0'} <span className="statSub">BNB</span></div>
+              </div>
+
+              <div className="statRow">
+                <div className="statLabel">Claimable</div>
+                <div className="statValue">{pendingWei ? formatEther(pendingWei) : '0'} <span className="statSub">BNB</span></div>
+              </div>
+
+              <div className="statRow">
+                <div className="statLabel">Buyout split</div>
+                <div className="statSub">90% → prev owner · 10% → FeeVault</div>
+              </div>
             </div>
             <div style={{ marginTop: 14, display: 'grid', gap: 10 }}>
               <button className="btn btnPrimary" type="button" disabled={isPending || priceWei === 0n} onClick={doTakeover}>Takeover (pay {priceWei ? formatEther(priceWei) : '0'} BNB)</button>
