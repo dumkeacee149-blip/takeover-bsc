@@ -343,6 +343,17 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             </button>
           </div>
 
+          {!showLive ? (
+            <div className="mobileTicker" aria-label="mobile live ticker">
+              <div className="tickerInner">
+                <span className="tickerMeta">LIVE</span>
+                <span>{feed[0]?.msg || 'No activity yet. Make a move →'}</span>
+                <span className="tickerMeta">•</span>
+                <span>{feed[1]?.msg || 'Events: takeover / claim / withdraw.'}</span>
+              </div>
+            </div>
+          ) : null}
+
           <div className="boardRow">
             <aside className={"card liveFeed" + (showLive ? "" : " liveFeedCollapsed")}>
               <div className="cardPad">

@@ -187,6 +187,7 @@ a{color:inherit}
 .liveFeedCollapsed .kpiRow{grid-template-columns:1fr}
 
 .ticker{margin-top:10px;overflow:hidden;border-radius:16px;border:2px solid rgba(240,185,11,.22);background:#141419;box-shadow:0 10px 0 rgba(0,0,0,.45)}
+.mobileTicker{display:none;overflow:hidden;border-radius:16px;border:2px solid rgba(240,185,11,.22);background:#141419;box-shadow:0 10px 0 rgba(0,0,0,.45)}
 .tickerInner{display:flex;gap:14px;white-space:nowrap;will-change:transform;animation:ticker 16s linear infinite;padding:10px 12px;font-weight:950;color:rgba(245,246,247,.88)}
 .tickerMeta{font-size:12px;font-weight:900;color:rgba(240,185,11,.90)}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-55%)}}
@@ -236,6 +237,8 @@ a{color:inherit}
 
   /* Hide the heavy Live panel when collapsed on mobile */
   .liveFeedCollapsed{display:none}
+  .mobileTicker{display:block;margin-bottom:12px}
+  .mobileTicker .tickerInner{padding:9px 10px;animation-duration:14s}
 
   .board{gap:6px;padding:12px;width:100%}
   .boardTile{border-radius:12px}
