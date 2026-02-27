@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { formatEther, parseEther } from 'viem'
 import { useAccount, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
@@ -43,6 +43,17 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
   const [selectedTile, setSelectedTile] = useState<number>(22)
   const [showLive, setShowLive] = useState<boolean>(false)
 
+  const [isMobile, setIsMobile] = useState(false)
+  const [boardFetchEnabled, setBoardFetchEnabled] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 560px)')
+    const apply = () => setIsMobile(mq.matches)
+    apply()
+    mq.addEventListener?.('change', apply)
+    return () => mq.removeEventListener?.('change', apply)
+  }, [])
+
   // Config guard
   try { assertWebConfig() } catch (e:any) {
     return (
@@ -73,7 +84,11 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
       functionName: 'getTile',
       args: [token, BigInt(id)],
     })) as any,
-    query: { refetchInterval: 8000 },
+    query: {
+      // Performance (mobile): don't hammer RPC with 100 reads + polling.
+      enabled: !isMobile || boardFetchEnabled,
+      refetchInterval: isMobile ? false : 8000,
+    },
   })
 
   const tileOwners = useMemo(() => {
@@ -348,9 +363,27 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         <div className="boardCol">
           <div className="boardTitleRow">
             <h3 style={{ margin: 0 }}>Board</h3>
-            <button className="btn btnGhost" type="button" onClick={() => setShowLive((v) => !v)}>
-              {showLive ? 'Hide' : 'Show'} live
-            </button>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              {isMobile ? (
+                <button
+                  className="btn btnGhost"
+                  type="button"
+                  onClick={() => {
+                    if (!boardFetchEnabled) {
+                      setBoardFetchEnabled(true)
+                      setTimeout(() => allTilesRead.refetch?.(), 50)
+                    } else {
+                      allTilesRead.refetch?.()
+                    }
+                  }}
+                >
+                  {boardFetchEnabled ? 'Refresh board' : 'Load board'}
+                </button>
+              ) : null}
+              <button className="btn btnGhost" type="button" onClick={() => setShowLive((v) => !v)}>
+                {showLive ? 'Hide' : 'Show'} live
+              </button>
+            </div>
           </div>
 
           {!showLive ? (
