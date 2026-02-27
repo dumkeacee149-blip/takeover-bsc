@@ -41,6 +41,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   const tiles = useMemo(() => Array.from({ length: 100 }, (_, i) => i), [])
   const [selectedTile, setSelectedTile] = useState<number>(22)
+  const [showLive, setShowLive] = useState<boolean>(false)
 
   // Config guard
   try { assertWebConfig() } catch (e:any) {
@@ -204,9 +205,11 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     <main className="container">
       <div className="sectionTitle">
         <div>
-          <h1 style={{ margin: 0 }}>Coin takeover</h1>
-          <div className="mono subtle" style={{ marginTop: 6 }}>{token}</div>
-          <div className="subtle" style={{ marginTop: 6 }}>Mode: <b>{mode}</b> {mode === 'agent' ? '🤖' : '🧑‍🔧'}</div>
+          <h1 style={{ margin: 0 }}>{mode === 'agent' ? 'Agent' : 'Human'} · Buy a tile</h1>
+          <div className="subtle" style={{ marginTop: 6 }}>
+            <span className="pill"><span className="mono" style={{ fontSize: 12 }}>{short(token)}</span></span>
+            <span className="pill" style={{ marginLeft: 10 }}>testnet</span>
+          </div>
         </div>
         <Link href={`/play?mode=${mode}`} className="btn btnGhost" style={{ textDecoration: 'none' }}>← Back</Link>
       </div>
@@ -214,12 +217,14 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
       <section className="coinLayout">
         <div className="boardCol">
           <div className="boardTitleRow">
-            <h3 style={{ margin: 0 }}>Buy any tile</h3>
-            <span className="pill">testnet</span>
+            <h3 style={{ margin: 0 }}>Board</h3>
+            <button className="btn btnGhost" type="button" onClick={() => setShowLive((v) => !v)}>
+              {showLive ? 'Hide' : 'Show'} live
+            </button>
           </div>
 
           <div className="boardRow">
-            <aside className="card liveFeed">
+            <aside className={"card liveFeed" + (showLive ? "" : " liveFeedCollapsed")}>
               <div className="cardPad">
                 <div className="sectionTitle" style={{ marginBottom: 10 }}>
                   <h3 style={{ margin: 0 }}>Live</h3>
@@ -258,7 +263,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
               </div>
             </aside>
 
-            <div className="boardWrap">
+            <div className="coinBoardWrap">
               <div className="board">
                 {tiles.map((id) => {
                   const o = tileOwners[id]

@@ -90,6 +90,7 @@ a{color:inherit}
 
 /* Pixel board */
 .boardWrap{position:relative;max-width:760px;margin:0 auto}
+.coinBoardWrap{position:relative;max-width:920px;margin:0 auto}
 /* Responsive board: no fixed pixel widths; tiles scale to container */
 .board{
   display:grid;
@@ -175,9 +176,11 @@ a{color:inherit}
 .agentCol{position:sticky;top:86px;height:fit-content}
 .boardTitleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
-.boardRow{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
+.boardRow{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start}
 .liveFeed{position:sticky;top:86px;height:fit-content}
-.liveFeedList{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
+.liveFeedList{display:grid;gap:10px;max-height:520px;overflow:auto;padding-right:4px}
+.liveFeedCollapsed .liveFeedList{display:none}
+.liveFeedCollapsed .kpiRow{grid-template-columns:1fr}
 .feedLine{display:flex;flex-direction:column;gap:6px;padding:10px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
 .feedMeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:rgba(232,238,252,.50)}
 .walletAvatar{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
