@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { GRID_REGISTRY } from '../../app/lib/chain'
-import { getMoveSuggestion, sanitizePlanBody } from '../../app/lib/agentEngine'
+import { GRID_REGISTRY } from '../../../app/lib/chain'
+import { getMoveSuggestion, sanitizePlanBody } from '../../../app/lib/agentEngine'
 
 type Body = {
   coin?: string

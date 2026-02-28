@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {
   CHAIN_ID,
   GRID_REGISTRY,
-} from '../../app/lib/chain'
-import { GRID_REGISTRY_ABI } from '../../app/lib/abis'
+} from '../../../app/lib/chain'
+import { GRID_REGISTRY_ABI } from '../../../app/lib/abis'
 import {
   getMoveSuggestion,
   sanitizePlanBody,
-} from '../../app/lib/agentEngine'
+} from '../../../app/lib/agentEngine'
 import {
   createWalletClient,
   createPublicClient,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { GRID_REGISTRY } from '../../../lib/chain'
-import { getMoveSuggestion, sanitizePlanBody } from '../../../lib/agentEngine'
+import { GRID_REGISTRY } from '../../../app/lib/chain'
+import { getMoveSuggestion, sanitizePlanBody } from '../../../app/lib/agentEngine'
 
 export const runtime = 'nodejs'
 

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import { CHAIN_ID, GRID_REGISTRY } from '../../../lib/chain'
-import { GRID_REGISTRY_ABI } from '../../../lib/abis'
+import { CHAIN_ID, GRID_REGISTRY } from '../../../app/lib/chain'
+import { GRID_REGISTRY_ABI } from '../../../app/lib/abis'
 import {
   getMoveSuggestion,
   sanitizePlanBody,
-} from '../../../lib/agentEngine'
+} from '../../../app/lib/agentEngine'
 import {
   createWalletClient,
   createPublicClient,
