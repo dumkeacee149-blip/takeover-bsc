@@ -41,7 +41,7 @@ const BoardTile = React.memo(function BoardTile({
       {compact && !selected ? (
         <div className="miniPix" style={{ background: `hsl(${hue} 92% 58%)` }} />
       ) : (
-        <TileIcon seed={1337 + id * 97} hue={hue} size={compact ? 2 : 3} />
+        <TileIcon seed={1337 + id * 97} hue={hue} size={compact ? 1 : 3} />
       )}
     </button>
   )
@@ -58,7 +58,9 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   const tiles = useMemo(() => Array.from({ length: 100 }, (_, i) => i), [])
   const [selectedTile, setSelectedTile] = useState<number>(22)
-  const onSelectTile = useCallback((id: number) => setSelectedTile(id), [])
+  const onSelectTile = useCallback((id: number) => {
+    setSelectedTile((prev) => (prev === id ? prev : id))
+  }, [])
   const [showLive, setShowLive] = useState<boolean>(false)
 
   const [isMobile, setIsMobile] = useState(false)
@@ -164,6 +166,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   useWatchContractEvent({
     ...gridRegistry,
+    enabled: shouldCollectLive,
     eventName: 'Takeover',
     args: { coin: token } as any,
     onLogs(logs) {
@@ -193,15 +196,17 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
         if (shouldCollectLive) {
           pushFeed(
-          'takeover',
-          `Takeover tile #${tileId} by ${short(newOwner)} · paid ${formatEther(paidWei)} · next ${formatEther(newPriceWei)} BNB`
-        )
+            'takeover',
+            `Takeover tile #${tileId} by ${short(newOwner)} · paid ${formatEther(paidWei)} · next ${formatEther(newPriceWei)} BNB`
+          )
+        }
       }
     },
   })
 
   useWatchContractEvent({
     ...gridRegistry,
+    enabled: shouldCollectLive,
     eventName: 'Withdraw',
     onLogs(logs) {
       for (const l of logs as any[]) {
@@ -219,6 +224,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   useWatchContractEvent({
     ...feeVault,
+    enabled: shouldCollectLive,
     eventName: 'Claimed',
     args: { coin: token } as any,
     onLogs(logs) {
