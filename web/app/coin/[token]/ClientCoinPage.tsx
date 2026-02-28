@@ -41,7 +41,7 @@ const BoardTile = React.memo(function BoardTile({
       {compact && !selected ? (
         <div className="miniPix" style={{ background: `hsl(${hue} 92% 58%)` }} />
       ) : (
-        <TileIcon seed={1337 + id * 97} hue={hue} size={3} />
+        <TileIcon seed={1337 + id * 97} hue={hue} size={compact ? 2 : 3} />
       )}
     </button>
   )
@@ -149,9 +149,16 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
     showLiveRef.current = showLive
   }, [showLive])
 
+  // On mobile default mode we cut down churn by pausing live updates unless panel is shown.
+  const shouldCollectLive = useMemo(() => !isMobile || showLive,
+    [isMobile, showLive]
+  )
+
   function pushFeed(kind: string, msg: string) {
+    if (!shouldCollectLive) return
+
     // Performance: when live is collapsed (common on mobile), keep only last 2 messages.
-    const cap = showLiveRef.current ? 30 : 2
+    const cap = isMobile ? 2 : (showLiveRef.current ? 30 : 2)
     setFeed((prev) => [{ kind, msg, ts: Date.now() }, ...prev].slice(0, cap))
   }
 
@@ -171,8 +178,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const protocolFeeWei = a.protocolFeeWei as bigint
         const newPriceWei = a.newPriceWei as bigint
 
-        // Performance: totals only update when live is open (mobile keeps it closed).
-        if (showLiveRef.current) {
+        if (!isMobile && showLiveRef.current) {
           setTotals((t) => ({
             ...t,
             takeovers: t.takeovers + 1,
@@ -181,9 +187,12 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
           }))
         }
 
-        setRecentTakeovers((prev) => [{ tileId, oldOwner, newOwner, priceWei: paidWei, ts: Date.now() }, ...prev].slice(0, 25))
+        if (shouldCollectLive) {
+          setRecentTakeovers((prev) => [{ tileId, oldOwner, newOwner, priceWei: paidWei, ts: Date.now() }, ...prev].slice(0, 25))
+        }
 
-        pushFeed(
+        if (shouldCollectLive) {
+          pushFeed(
           'takeover',
           `Takeover tile #${tileId} by ${short(newOwner)} · paid ${formatEther(paidWei)} · next ${formatEther(newPriceWei)} BNB`
         )
@@ -201,7 +210,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const user = a.user as string
         const amountWei = a.amountWei as bigint
         // only show on this page when it's you, otherwise it's noisy
-        if (address && user?.toLowerCase() === address.toLowerCase()) {
+        if (shouldCollectLive && address && user?.toLowerCase() === address.toLowerCase()) {
           pushFeed('withdraw', `Buyouts withdrawn by you: ${formatEther(amountWei)} BNB`)
         }
       }
@@ -219,8 +228,10 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         const tileId = Number(a.tileId)
         const owner = a.owner as string
         const amountWei = a.amountWei as bigint
-        if (showLiveRef.current) setTotals((t) => ({ ...t, claimedWei: t.claimedWei + (amountWei || 0n) }))
-        pushFeed('claim', `Claimed on tile #${tileId} by ${short(owner)} · ${formatEther(amountWei)} BNB`)
+        if (!isMobile && showLiveRef.current) setTotals((t) => ({ ...t, claimedWei: t.claimedWei + (amountWei || 0n) }))
+        if (shouldCollectLive) {
+          pushFeed('claim', `Claimed on tile #${tileId} by ${short(owner)} · ${formatEther(amountWei)} BNB`)
+        }
       }
     },
   })
