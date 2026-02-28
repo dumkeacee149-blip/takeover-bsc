@@ -486,6 +486,11 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
         <div className="boardCol">
           <div className="boardTitleRow">
             <h3 style={{ margin: 0 }}>Board</h3>
+            {isMobile ? (
+              <div className="subtle" style={{ fontSize: 12 }}>Tap tile for onchain details · {isMobile ? 'mobile mode' : ''}</div>
+            ) : (
+              <div></div>
+            )}
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
               {isMobile ? (
                 <button
@@ -553,7 +558,8 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             <div className="coinBoardWrap">
               <div className="board">
                 {tiles.map((id) => {
-                  const o = tileOwners[id]
+                  const shouldUseBoardData = !isMobile || boardFetchEnabled
+                  const o = shouldUseBoardData ? tileOwners[id] : '0x0000000000000000000000000000000000000000'
                   const isOwned = !!o && o !== '0x0000000000000000000000000000000000000000'
                   const mine = !!(me && o && o.toLowerCase() === me)
 
@@ -563,7 +569,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                     <BoardTile
                       key={id}
                       id={id}
-                      variant={variant as any}
+                      variant={shouldUseBoardData ? (variant as any) : 'none'}
                       selected={id === selectedTile}
                       onSelect={onSelectTile}
                       compact={isMobile}
@@ -576,7 +582,8 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
           </div>
         </div>
 
-        <aside className="card infoCol">
+        {!isMobile ? (
+          <aside className="card infoCol">
           <div className="cardPad">
             <div className="sectionTitle">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -645,8 +652,9 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             <div className="footer">Connected: {address ? short(address) : 'not connected'}{chainId ? ` · chain ${chainId}` : ''}</div>
           </div>
         </aside>
+        ) : null}
 
-        {mode === 'agent' ? (
+        {mode === 'agent' && !isMobile ? (
           <aside className="card agentPanel" style={{ width: 360 }}>
             <div className="cardPad">
               <div className="sectionTitle">
