@@ -9,7 +9,7 @@ async function main() {
   if (!gridAddr) throw new Error('Missing GRID_REGISTRY env var')
 
   const coin = process.env.COIN || '0x0000000000000000000000000000000000000000'
-  const initial = process.env.INITIAL_PRICE_BNB || '0.001'
+  const initial = process.env.INITIAL_PRICE_BNB || '0.1'
 
   console.log('ChainId:', chainId)
   console.log('Deployer:', deployer.address)

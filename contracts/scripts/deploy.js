@@ -45,7 +45,7 @@ async function main() {
 
   // Example init call (set coin address + initial price as you wish)
   // const coin = "0x0000000000000000000000000000000000000000";
-  // const init = await grid.initCoin(coin, hre.ethers.parseEther("0.01"));
+  // const init = await grid.initCoin(coin, hre.ethers.parseEther("0.1"));
   // await init.wait();
 }
 
