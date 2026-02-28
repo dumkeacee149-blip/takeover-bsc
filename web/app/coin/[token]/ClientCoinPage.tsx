@@ -509,68 +509,47 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
             </div>
           </div>
 
-          {!showLive ? (
-            <div className="mobileTicker" aria-label="mobile live ticker">
-              <div className="tickerInner">
-                <span className="tickerMeta">LIVE</span>
-                <span>{feed[0]?.msg || 'No activity yet. Make a move →'}</span>
-                <span className="tickerMeta">•</span>
-                <span>{feed[1]?.msg || 'Events: takeover / claim / withdraw.'}</span>
-              </div>
-            </div>
-          ) : null}
-
           <div className="boardRow">
-            <aside className={"card liveFeed" + (showLive ? "" : " liveFeedCollapsed")}>
-              <div className="cardPad">
-                <div className="sectionTitle" style={{ marginBottom: 10 }}>
-                  <h3 style={{ margin: 0 }}>Live</h3>
-                  <span className="pill"><span className="subtle">session</span></span>
-                </div>
-                <div className="kpiRow">
-                  <div className="kpi">
-                    <div className="kpiLabel">Takeovers</div>
-                    <div className="kpiValue">{totals.takeovers}</div>
+            {!isMobile || showLive ? (
+              <aside className="card liveFeed">
+                <div className="cardPad">
+                  <div className="sectionTitle" style={{ marginBottom: 10 }}>
+                    <h3 style={{ margin: 0 }}>Live</h3>
+                    <span className="pill"><span className="subtle">session</span></span>
                   </div>
-                  <div className="kpi">
-                    <div className="kpiLabel">Protocol fees</div>
-                    <div className="kpiValue">{formatEther(totals.protocolFeesWei)}</div>
-                  </div>
-                  <div className="kpi">
-                    <div className="kpiLabel">Claimed</div>
-                    <div className="kpiValue">{formatEther(totals.claimedWei)}</div>
-                  </div>
-                </div>
-
-                {!showLive ? (
-                  <div className="ticker" aria-label="live ticker">
-                    <div className="tickerInner">
-                      <span className="tickerMeta">LIVE</span>
-                      <span>{feed[0]?.msg || 'No activity yet. Make a move →'}</span>
-                      <span className="tickerMeta">•</span>
-                      <span>{feed[1]?.msg || 'Events: takeover / claim / withdraw.'}</span>
+                  <div className="kpiRow">
+                    <div className="kpi">
+                      <div className="kpiLabel">Takeovers</div>
+                      <div className="kpiValue">{totals.takeovers}</div>
+                    </div>
+                    <div className="kpi">
+                      <div className="kpiLabel">Protocol fees</div>
+                      <div className="kpiValue">{formatEther(totals.protocolFeesWei)}</div>
+                    </div>
+                    <div className="kpi">
+                      <div className="kpiLabel">Claimed</div>
+                      <div className="kpiValue">{formatEther(totals.claimedWei)}</div>
                     </div>
                   </div>
-                ) : null}
 
-                <div className="liveFeedList" style={{ marginTop: 12 }}>
-                  {feed.length === 0 ? (
-                    <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
-                  ) : (
-                    feed.map((f, idx) => (
-                      <div key={idx} className={"feedLine " + (f.kind || '')}>
-                        <div style={{ fontWeight: 900, lineHeight: 1.35 }}>{f.msg}</div>
-                        <div className="feedMeta">
-                          <span>{f.kind}</span>
-                          <span>{new Date(f.ts).toLocaleTimeString()}</span>
+                  <div className="liveFeedList" style={{ marginTop: 12 }}>
+                    {feed.length === 0 ? (
+                      <div className="subtle" style={{ fontSize: 13 }}>No activity yet. Make a move →</div>
+                    ) : (
+                      feed.slice(0, isMobile ? 2 : feed.length).map((f, idx) => (
+                        <div key={idx} className={"feedLine " + (f.kind || '')}>
+                          <div style={{ fontWeight: 900, lineHeight: 1.35 }}>{f.msg}</div>
+                          <div className="feedMeta">
+                            <span>{f.kind}</span>
+                            <span>{new Date(f.ts).toLocaleTimeString()}</span>
+                          </div>
                         </div>
-                      </div>
-                    ))
-                  )}
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
-            </aside>
-
+              </aside>
+            ) : null}
             <div className="coinBoardWrap">
               <div className="board">
                 {tiles.map((id) => {
