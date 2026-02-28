@@ -264,6 +264,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
   const [maxPriceStr, setMaxPriceStr] = useState('0.05')
   const [strategy, setStrategy] = useState<'cheapest' | 'random' | 'defend'>('cheapest')
   const [suggestion, setSuggestion] = useState<string>('')
+  const [remoteBusy, setRemoteBusy] = useState<boolean>(false)
 
   function parseBNB(s: string): bigint | null {
     const t = (s || '').trim()
@@ -361,6 +362,93 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
       return
     }
     await doTakeover()
+  }
+
+  async function planRemoteMove() {
+    setRemoteBusy(true)
+    setSuggestion('Requesting remote plan...')
+
+    try {
+      const payload: any = {
+        coin: token,
+        budgetBnb: budgetStr,
+        maxPriceBnb: maxPriceStr,
+        strategy,
+      }
+
+      if (address) payload.myAddress = address
+      if (strategy === 'defend') {
+        payload.recentLosses = recentTakeovers.slice(0, 12).map((t) => ({ tileId: t.tileId }))
+      }
+
+      const res = await fetch('/api/agent/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json()
+      if (!res.ok || !data?.ok) {
+        setSuggestion(`Remote plan failed: ${data?.error || 'unknown error'}`)
+        return
+      }
+      const s = data.suggestion
+      if (s && s.tileId !== undefined) {
+        setSelectedTile(Number(s.tileId))
+        setSuggestion(`Remote plan: tile #${s.tileId}, price ${s.priceBnb} BNB, ${s.reason}`)
+      } else {
+        setSuggestion('Remote plan: no result.')
+      }
+    } catch (err: any) {
+      setSuggestion(`Remote plan failed: ${String(err?.message || err)}`)
+    } finally {
+      setRemoteBusy(false)
+    }
+  }
+
+  async function executeRemoteMove() {
+    setRemoteBusy(true)
+    setSuggestion('Requesting remote execute...')
+
+    try {
+      const payload: any = {
+        coin: token,
+        budgetBnb: budgetStr,
+        maxPriceBnb: maxPriceStr,
+        strategy,
+      }
+      if (address) payload.myAddress = address
+      if (strategy === 'defend') {
+        payload.recentLosses = recentTakeovers.slice(0, 12).map((t) => ({ tileId: t.tileId }))
+      }
+
+      const res = await fetch('/api/agent/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json()
+      if (!res.ok || !data?.ok) {
+        setSuggestion(`Remote execute failed: ${data?.error || 'unknown error'}`)
+        return
+      }
+
+      if (data.dryRun) {
+        setSuggestion(`Remote dry-run OK: tile #${data.tileId}, value ${data.valueBnb} BNB`)
+        return
+      }
+
+      const hash = data.txHash
+      if (hash) {
+        setTxHash(String(hash))
+        setSuggestion(`Remote executed on-chain: tile #${data.tileId}, value ${data.valueBnb} BNB`)
+      } else {
+        setSuggestion('Remote executed, but tx hash missing from response.')
+      }
+    } catch (err: any) {
+      setSuggestion(`Remote execute failed: ${String(err?.message || err)}`)
+    } finally {
+      setRemoteBusy(false)
+    }
   }
 
   return (
@@ -568,7 +656,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                 <span className="pill">🦞 auto-suggest</span>
               </div>
               <p className="subtle" style={{ marginTop: 0 }}>
-                MVP: agent suggests a move; you still sign every transaction.
+                MVP: local suggest still requires wallet sign; remote API can execute with server agent wallet.
               </p>
               <div style={{ display: 'grid', gap: 10 }}>
                 <label className="subtle">Budget (BNB)
@@ -603,6 +691,10 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
                 <button className="btn btnPrimary" type="button" onClick={suggestMove}>Suggest Move</button>
                 <button className="btn" type="button" onClick={executeSuggested} disabled={isPending || priceWei === 0n}>Execute (sign tx)</button>
+                <button className="btn btnGhost" type="button" onClick={planRemoteMove} disabled={remoteBusy}>Plan via remote API</button>
+                <button className="btn btnPrimary" type="button" onClick={executeRemoteMove} disabled={remoteBusy}>
+                  Execute via remote API
+                </button>
               </div>
             </div>
           </aside>

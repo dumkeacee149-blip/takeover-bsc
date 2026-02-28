@@ -65,3 +65,18 @@ curl -X POST https://takeover-bsc.vercel.app/api/agent/execute \
 
 当前页面的 Agent 模式仍保留“本地推荐”；
 `/api/agent/*` 提供的是远程触发入口，可直接被其他 agent 服务调用。
+
+## 快速一键（你要的最省事版）
+
+在仓库里直接有脚本：
+
+```bash
+cd /Users/dalao/.openclaw/workspace/takeover-bsc/web
+chmod +x agent-runner.sh
+AGENT_API_TOKEN=<your_token_if_set> AGENT_COIN=0x0000000000000000000000000000000000000000   AGENT_BUDGET=0.5 AGENT_MAX_PRICE=0.05 AGENT_STRATEGY=cheapest ./agent-runner.sh
+```
+
+这会先走 `/api/agent/plan`，再走 `/api/agent/execute`。
+
+- 如果你只想看模拟：`AGENT_DRY_RUN=true`（仅 `/api/agent/plan`，不改链）
+- `AGENT_TARGET` 可改为本地调试地址（默认 `https://takeover-bsc.vercel.app`）
