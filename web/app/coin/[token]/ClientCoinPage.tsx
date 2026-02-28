@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { formatEther, parseEther } from 'viem'
 import { useAccount, useReadContract, useReadContracts, useWatchContractEvent, useWriteContract } from 'wagmi'
@@ -15,7 +15,7 @@ function getMode(searchParams: Record<string, string | string[] | undefined>) {
   return (Array.isArray(m) ? m[0] : m) === 'agent' ? 'agent' : 'human'
 }
 
-function BoardTile({
+const BoardTile = React.memo(function BoardTile({
   id,
   variant,
   selected,
@@ -45,7 +45,7 @@ function BoardTile({
       )}
     </button>
   )
-}
+})
 
 function short(addr?: string) {
   if (!addr) return ''
@@ -58,6 +58,7 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
 
   const tiles = useMemo(() => Array.from({ length: 100 }, (_, i) => i), [])
   const [selectedTile, setSelectedTile] = useState<number>(22)
+  const onSelectTile = useCallback((id: number) => setSelectedTile(id), [])
   const [showLive, setShowLive] = useState<boolean>(false)
 
   const [isMobile, setIsMobile] = useState(false)
@@ -568,7 +569,8 @@ export default function ClientCoinPage({ token, searchParams }: { token: `0x${st
                       id={id}
                       variant={variant as any}
                       selected={id === selectedTile}
-                      onSelect={setSelectedTile}
+                      onSelect={onSelectTile}
+                      compact={isMobile}
                     />
                   )
                 })}
